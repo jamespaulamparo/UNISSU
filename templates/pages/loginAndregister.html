@@ -6,31 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNISSU — Access Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/loginAndregister.css' %}">
 </head>
 <body>
 
 <div class="split-layout">
-    <!-- Left Graphic Side -->
+    <!-- Left: Solid Edge-to-Edge Brand Panel -->
     <div class="split-left">
         <div class="left-content">
-            <a href="{% url 'home' %}" class="back-home">&larr; Back to Home</a>
+            <a href="{% url 'home' %}" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            <div class="brand-icon-large">is</div>
             <h1>UNISSU Portal</h1>
-            <p>Your streamlined campus uniform and gear system.</p>
+            <p>Your streamlined campus uniform and gear system. Sign in to reserve your items and manage your student profile.</p>
         </div>
     </div>
 
-    <!-- Right Form Side -->
+    <!-- Right: Spacious Authentication Forms -->
     <div class="split-right">
         <div class="form-container">
+            
+            {% if messages %}
+                <div class="auth-alerts">
+                    {% for message in messages %}
+                        <div class="alert-box">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             <div class="form-header">
                 <h2>Access Your Account</h2>
                 <p>Sign in or create a new student profile.</p>
             </div>
 
+            <!-- iOS Style Tab Switcher -->
             <div class="tab-controls">
-                <button class="tab-btn active" onclick="showTab('login')">Sign In</button>
-                <button class="tab-btn" onclick="showTab('register')">Student Registration</button>
+                <button class="tab-btn active" onclick="showTab('login')">Log In</button>
+                <button class="tab-btn" onclick="showTab('register')">Register</button>
             </div>
 
             <!-- Login Form -->
@@ -43,13 +55,15 @@
                     </div>
                     <div class="input-group">
                         <label>Password</label>
-                        {{ login_form.password }}
+                        <div class="password-wrapper">
+                            {{ login_form.password }}
+                        </div>
                     </div>
-                    <button type="submit" class="btn-solid-pink">Sign In</button>
+                    <button type="submit" class="btn-solid-pink">Sign In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
                 </form>
             </div>
 
-            <!-- Register Form (Same Design) -->
+            <!-- Register Form -->
             <div id="register-tab" class="tab-content">
                 <form method="POST" action="{% url 'register' %}">
                     {% csrf_token %}
@@ -102,7 +116,6 @@
         event.target.classList.add('active');
     }
     
-    // Add default styling classes to Django forms
     document.querySelectorAll('input').forEach(input => {
         if(input.type !== 'hidden' && input.type !== 'checkbox') {
             input.classList.add('form-input');

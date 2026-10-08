@@ -1,7 +1,7 @@
 {% load static %}
 <div class="prod-card">
     <!-- The cycle tag alternates pastel backgrounds dynamically -->
-    <div class="prod-img {% cycle 'bg-pink' 'bg-green' %}" style="position: relative;">
+    <div class="prod-img" style="position: relative; background: transparent;">
         {% if uniform.image %}
             <img src="{{ uniform.image.url }}" alt="{{ uniform.name }}" class="card-fitted-img">
         {% elif uniform.image_url %}

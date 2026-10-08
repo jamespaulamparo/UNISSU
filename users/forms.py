@@ -52,7 +52,7 @@ class RegistrationForm(forms.ModelForm):
         label="Student / ID Number",
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'e.g. 2023-1029-A (Optional)'
+            'placeholder': 'e.g. 12x-xxxx-x'
         })
     )
     course_year = forms.CharField(
@@ -61,7 +61,7 @@ class RegistrationForm(forms.ModelForm):
         label="Program & Year Level",
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'e.g. BS Information Systems 3-A'
+            'placeholder': 'e.g. BSIS 3B'
         })
     )
     email = forms.EmailField(
@@ -76,7 +76,7 @@ class RegistrationForm(forms.ModelForm):
         label="Password",
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Create a password (min. 6 characters)',
+            'placeholder': 'Create a password',
             'autocomplete': 'new-password'
         }),
         help_text="Password must be at least 6 characters long."
@@ -96,7 +96,7 @@ class RegistrationForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Choose a username or use student ID'
+                'placeholder': 'e.g. jdelacruz'
             })
         }
 

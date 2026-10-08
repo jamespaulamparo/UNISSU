@@ -1,164 +1,113 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ uniform.name }} - iSysWear{% endblock %}
+{% block title %}{{ uniform.name }} — UNISSU{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/uniformDetail.css' %}">
-<link rel="stylesheet" href="{% static 'css/order_management.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="uniform-detail-container">
-    <div class="container">
-        <a href="{% url 'uniforms' %}" class="breadcrumb"><i class="fas fa-chevron-left"></i> Back to Shop</a>
+<div class="product-page-container">
+    <a href="{% url 'uniforms' %}" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Back to Catalog
+    </a>
+
+    <div class="product-split-layout">
         
-        <div class="detail-content">
-            <!-- Product Image -->
-            <div class="detail-image">
+        <!-- Left: Product Image Gallery -->
+        <div class="product-gallery">
+            <div class="main-image-box">
                 {% if uniform.image %}
-                    <img src="{{ uniform.image.url }}" alt="{{ uniform.name }}" class="main-image">
+                    <img src="{{ uniform.image.url }}" alt="{{ uniform.name }}" class="fitted-image">
                 {% else %}
-                    {# Use specific image based on uniform ID for unique assignment #}
                     {% if uniform.id == 1 %}
-                        <img src="{% static 'images/mdfem.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/mdfem.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 2 %}
-                        <img src="{% static 'images/mdmale.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/mdmale.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 3 %}
-                        <img src="{% static 'images/tdfem.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/tdfem.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 4 %}
-                        <img src="{% static 'images/tdmale.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/tdmale.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 5 %}
-                        <img src="{% static 'images/slacksF.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/slacksF.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 6 %}
-                        <img src="{% static 'images/slacksM.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/slacksM.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 7 %}
-                        <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 8 %}
-                        <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 9 %}
-                        <img src="{% static 'images/newlace.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                        <img src="{% static 'images/newlace.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% else %}
-                        {# Default fallback based on gender #}
                         {% if uniform.gender == 'Female' %}
-                            <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                            <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                         {% else %}
-                            <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="main-image static-fallback">
+                            <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                         {% endif %}
                     {% endif %}
                 {% endif %}
             </div>
-
-            <!-- Product Info -->
-            <div class="detail-info">
-                <h1>{{ uniform.name }}</h1>
-                
-                <div class="product-metadata">
-                    <div class="meta-item">
-                        <strong>Size:</strong>
-                        <span id="size-display">Multiple sizes available</span>
-                    </div>
-                    <div class="meta-item">
-                        <strong>Gender:</strong>
-                        <span>{{ uniform.get_gender_display|default:uniform.gender }}</span>
-                    </div>
-                    <div class="meta-item">
-                        <strong>Stock:</strong> 
-                        {% if uniform.stock > 0 %}
-                            <span class="in-stock">{{ uniform.stock }} available</span>
-                        {% else %}
-                            <span class="out-of-stock">Out of Stock</span>
-                        {% endif %}
-                    </div>
-                </div>
-
-                {% if uniform.id == 9 %}
-                    <div class="size-section">
-                        <h4>Size</h4>
-                        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; text-align: center; font-weight: 600;">
-                            One Size Fits All
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="size-section">
-                        <h4>Select Your Size</h4>
-                        <div class="size-buttons">
-                            <button type="button" class="size-btn" data-size="XS">XS</button>
-                            <button type="button" class="size-btn" data-size="S">S</button>
-                            <button type="button" class="size-btn" data-size="M">M</button>
-                            <button type="button" class="size-btn" data-size="L">L</button>
-                            <button type="button" class="size-btn" data-size="XL">XL</button>
-                            <button type="button" class="size-btn" data-size="XXL">XXL</button>
-                            <button type="button" class="size-btn" data-size="XXXL">XXXL</button>
-                        </div>
-                        <p><strong>Please select a size</strong> <span id="selected-size-text"></span></p>
-                        <div class="size-chart">
-                            {{ uniform.get_size_display|linebreaks }}
-                        </div>
-                    </div>
-                {% endif %}
-
-                <div class="price-section">
-
-<h2 class="price">₱{{ uniform.price|floatformat:2 }}</h2>
-                    <p class="price-note">Competitive pricing on quality uniforms</p>
-                </div>
-
-                <div class="description-section">
-                    <h3>Description</h3>
-                    <p>{{ uniform.description }}</p>
-                </div>
-
-                <!-- Add to Cart Form -->
-                {% if uniform.stock > 0 %}
-                    <form method="POST" action="{% url 'add_to_cart' uniform.id %}" class="add-to-cart-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="size" id="selected_size" value="{% if uniform.id == 9 %}One Size{% else %} {% endif %}">
-                        <div class="quantity-selector">
-                            <label for="quantity">Quantity:</label>
-                            <div class="quantity-input">
-                                <button type="button" class="qty-btn" id="decrease-qty">-</button>
-                                <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ uniform.stock }}" class="qty-input">
-                                <button type="button" class="qty-btn" id="increase-qty" data-max-stock="{{ uniform.stock }}">+</button>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn-primary btn-add-to-cart">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
-                        </button>
-                    </form>
-                {% else %}
-                    <button class="btn-primary" disabled style="cursor: not-allowed; opacity: 0.6;">
-                        Out of Stock
-                    </button>
-                {% endif %}
-
-                <div class="trust-badges">
-                    <div class="badge">
-                        <i class="fas fa-shipping-fast"></i>
-                        <span>Free Shipping on Orders Over ₱1,000</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-lock"></i>
-                        <span>Secure Checkout</span>
-                    </div>
-                    <div class="badge">
-                        <i class="fas fa-undo"></i>
-                        <span>30-Day Returns</span>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Similar Products -->
-        <section class="similar-products">
-            <h3>Similar Uniforms</h3>
-            <div class="products-carousel">
-                <!-- Similar products would be displayed here -->
-                <p>Browse more uniforms in our collection</p>
-                <a href="{% url 'uniforms' %}" class="btn-secondary">View All</a>
+        <!-- Right: Product Information & Form -->
+        <div class="product-info-panel">
+            <div class="info-header">
+                <span class="meta-tag">{{ uniform.get_gender_display|default:uniform.gender }}</span>
+                <h1>{{ uniform.name }}</h1>
+                <div class="price-display">₱{{ uniform.price|floatformat:2 }}</div>
             </div>
-        </section>
+
+            <p class="product-description">{{ uniform.description }}</p>
+
+            <form method="POST" action="{% url 'add_to_cart' uniform.id %}" class="purchase-form">
+                {% csrf_token %}
+                <input type="hidden" name="size" id="selected_size" value="{% if uniform.id == 9 %}One Size{% else %} {% endif %}">
+
+                <!-- Size Selection -->
+                <div class="form-section">
+                    <div class="section-label">
+                        <span>Select Size</span>
+                        <span id="selected-size-text" class="text-pink"></span>
+                    </div>
+                    
+                    {% if uniform.id == 9 %}
+                        <div class="size-pill active" style="justify-content: center; width: 100%;">One Size Fits All</div>
+                    {% else %}
+                        <div class="size-grid">
+                            <button type="button" class="size-pill" data-size="XS">XS</button>
+                            <button type="button" class="size-pill" data-size="S">S</button>
+                            <button type="button" class="size-pill" data-size="M">M</button>
+                            <button type="button" class="size-pill" data-size="L">L</button>
+                            <button type="button" class="size-pill" data-size="XL">XL</button>
+                            <button type="button" class="size-pill" data-size="XXL">2XL</button>
+                            <button type="button" class="size-pill" data-size="XXXL">3XL</button>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Quantity & Submit -->
+                <div class="form-section row-flex">
+                    <div class="quantity-wrapper">
+                        <button type="button" class="qty-btn" id="decrease-qty">-</button>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ uniform.stock }}" class="qty-input" readonly>
+                        <button type="button" class="qty-btn" id="increase-qty" data-max-stock="{{ uniform.stock }}">+</button>
+                    </div>
+
+                    {% if uniform.stock > 0 %}
+                        <button type="submit" class="btn-primary-large">Add to Bag</button>
+                    {% else %}
+                        <button type="button" class="btn-disabled-large" disabled>Out of Stock</button>
+                    {% endif %}
+                </div>
+            </form>
+
+            <!-- Feature Checklist -->
+            <div class="feature-checklist">
+                <div class="check-item"><i class="fas fa-check-circle"></i>For further information, ask your class adviser for details</div>
+
+            </div>
+        </div>
     </div>
 </div>
 
@@ -176,33 +125,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Size selector - moved outside conditional
-    const sizeButtons = document.querySelectorAll('.size-btn');
-    if (sizeButtons.length > 0) {
-        sizeButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                sizeButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('selected_size').value = this.dataset.size;
-                document.getElementById('selected-size-text').textContent = this.dataset.size;
-            });
-        });
-    }
-
-    if (decreaseBtn) {
-        decreaseBtn.addEventListener('click', function() {
-            if (qtyInput.value > 1) {
-                qtyInput.value = parseInt(qtyInput.value) - 1;
-            }
-        });
-    }
-
     if (increaseBtn) {
         increaseBtn.addEventListener('click', function() {
             const maxStock = parseInt(this.dataset.maxStock);
             if (parseInt(qtyInput.value) < maxStock) {
                 qtyInput.value = parseInt(qtyInput.value) + 1;
             }
+        });
+    }
+
+    const sizeButtons = document.querySelectorAll('.size-pill');
+    if (sizeButtons.length > 0 && document.getElementById('selected_size').value !== 'One Size') {
+        sizeButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                sizeButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('selected_size').value = this.dataset.size;
+                document.getElementById('selected-size-text').textContent = '— ' + this.dataset.size;
+            });
         });
     }
 });

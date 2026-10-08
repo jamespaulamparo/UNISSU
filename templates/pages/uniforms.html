@@ -1,37 +1,72 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Shop Uniforms - iSysWear{% endblock %}
+{% block title %}Catalog — UNISSU{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/uniforms.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="shop-container">
-    <div class="container">
-        <h1>Our Uniforms</h1>
-        
-        <div class="shop-content">
-            <!-- Products Grid -->
-            <main class="products-grid-container">
-                {% if uniforms %}
-                    <div class="products-grid">
-                        {% for uniform in uniforms %}
-                            {% include 'components/product_card.html' with uniform=uniform size_label='Multiple Sizes' %}
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="no-results">
+<div class="catalog-page-container">
+    <div class="catalog-header">
+        <h1>Campus Gear Catalog</h1>
+        <p>Browse official uniforms, department polos, and campus essentials.</p>
+    </div>
+    
+    <div class="catalog-layout">
+        <!-- Sidebar / Filters -->
+        <aside class="catalog-sidebar">
+            <div class="filter-section">
+                <h3>Categories</h3>
+                <ul class="filter-list">
+                    <li><a href="{% url 'uniforms' %}" class="filter-link active">All Items</a></li>
+                    <li><a href="{% url 'uniforms' %}?category=uniforms" class="filter-link">Campus Uniforms</a></li>
+                    <li><a href="{% url 'uniforms' %}?category=department" class="filter-link">Department Polos</a></li>
+                    <li><a href="{% url 'uniforms' %}?category=bottoms" class="filter-link">Slacks & Pants</a></li>
+                    <li><a href="{% url 'uniforms' %}?category=lanyards" class="filter-link">Lanyards & IDs</a></li>
+                </ul>
+            </div>
+
+            <div class="filter-section">
+                <h3>Gender Filter</h3>
+                <div class="filter-options">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="gender" value="M">
+                        <span class="checkmark"></span> Male
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="gender" value="F">
+                        <span class="checkmark"></span> Female
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" name="gender" value="U">
+                        <span class="checkmark"></span> Unisex
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Products Grid -->
+        <main class="catalog-main">
+            {% if uniforms %}
+                <div class="products-grid">
+                    {% for uniform in uniforms %}
+                        {% include 'components/product_card.html' with uniform=uniform size_label='Multiple Sizes' %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Empty Search/Filter State -->
+                <div class="empty-catalog">
+                    <div class="empty-icon-circle bg-pink">
                         <i class="fas fa-search"></i>
-                        <h3>No uniforms found</h3>
-                        <p>Try adjusting your filters</p>
-                        <a href="{% url 'uniforms' %}" class="btn-primary">Clear Filters</a>
                     </div>
-                {% endif %}
-            </main>
-        </div>
+                    <h2>No items found</h2>
+                    <p>We couldn't find any uniforms matching your current filters.</p>
+                    <a href="{% url 'uniforms' %}" class="btn-primary-outline" style="display: inline-block;">Clear Filters</a>
+                </div>
+            {% endif %}
+        </main>
     </div>
 </div>
 {% endblock %}
-

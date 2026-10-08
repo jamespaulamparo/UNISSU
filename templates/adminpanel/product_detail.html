@@ -1,0 +1,134 @@
+{% extends 'adminpanel/base.html' %}
+{% load static %}
+
+
+{% block title %}Product Detail{% endblock %}
+
+
+{% block content %}
+<div class="page-header">
+    <h1>Product: {{ p.name }}</h1>
+    <div class="page-actions">
+        <a href="{% url 'adminpanel:products_list' %}" class="btn btn-secondary">← Back to Products</a>
+    </div>
+</div>
+
+
+<div class="product-detail-grid">
+    <div class="product-main-card">
+        <div class="product-image">
+            {% if p.image %}
+                <img src="{{ p.image.url }}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.image_url %}
+                <img src="{{ p.image_url }}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 10 %}
+                <img src="{% static 'images/mdfem.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 11 %}
+                <img src="{% static 'images/mdmale.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 12 %}
+                <img src="{% static 'images/tdfem.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 13 %}
+                <img src="{% static 'images/tdmale.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 14 %}
+                <img src="{% static 'images/slacksF.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 15 %}
+                <img src="{% static 'images/slacksM.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 16 %}
+                <img src="{% static 'images/wed.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 17 %}
+                <img src="{% static 'images/thu.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% elif p.id == 18 %}
+                <img src="{% static 'images/newlace.jpg' %}" alt="{{ p.name }}" style="max-width: 300px; height: auto;">
+            {% else %}
+                <div class="no-image">No image</div>
+            {% endif %}
+        </div>
+        <div class="product-info">
+            <h2>{{ p.name }}</h2>
+            <p class="product-price">₱{{ p.price|floatformat:2 }}</p>
+            <p class="product-stock">Stock: {{ p.stock }}</p>
+            <div class="product-stats">
+                <span>Sold: {{ p.sold }}</span>
+                <span>Views: {{ p.views }}</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="product-details-card">
+        <h3>Details</h3>
+        <dl>
+            <dd>{{ p.description|default:"No description"|linebreaks|truncatewords:30 }}</dd>
+            <dt>Size</dt>
+            <dd>{{ p.size|default:"N/A" }}</dd>
+            <dt>Gender</dt>
+            <dd>{{ p.gender|default:"N/A" }}</dd>
+        </dl>
+    </div>
+</div>
+
+
+<style>
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+.product-main-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.product-image, .product-info {
+    padding: 25px;
+}
+.product-main-card .product-image {
+    text-align: center;
+    background: #f8f9fa;
+}
+.no-image {
+    width: 300px;
+    height: 200px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border-radius: 4px;
+    color: #999;
+}
+.product-info h2 { margin-top: 0; color: #333; }
+.product-price { font-size: 1.5rem; font-weight: bold; color: #28a745; margin: 10px 0; }
+.product-stock { font-size: 1.1rem; color: #666; margin: 10px 0; }
+.product-stats { display: flex; gap: 20px; font-size: 0.9rem; color: #888; }
+.product-details-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.product-details-card h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+.product-details-card dl { margin: 0; }
+.product-details-card dt { font-weight: 600; color: #666; margin-top: 15px; }
+.product-details-card dd { margin: 0 0 15px 0; padding: 8px; background: #f8f9fa; border-radius: 4px; }
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.page-header h1 { margin: 0; font-size: 1.5rem; }
+.btn { padding: 8px 16px; border-radius: 4px; text-decoration: none; font-size: 0.9rem; display: inline-block; }
+.btn-secondary { background-color: #6c757d; color: white; }
+@media (max-width: 768px) {
+    .product-detail-grid { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}

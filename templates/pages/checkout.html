@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout - iSysWear{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+    <div class="container">
+        <h1>Checkout</h1>
+
+        <div class="checkout-content">
+            <div class="checkout-form-section">
+                <h2>Student Information</h2>
+                <form method="POST" class="checkout-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" value="{{ user.full_name }}" readonly class="form-control" style="background-color: #f5f5f5;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" value="{{ user.email }}" readonly class="form-control" style="background-color: #f5f5f5;">
+                    </div>
+
+                
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Payment Method</h3>
+                    <div class="payment-options">
+                        
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cash_on_CIS_faculty" required>
+                            <i class="fas fa-money-bill"></i>
+                            Cash on Hand (Pay to CIS Faculty)
+                        </label>
+                    </div>
+
+        
+                   <button type="submit" name="place_order_all" class="btn-primary btn-place-order">
+    <i class="fas fa-check"></i> Place Order
+</button>
+                </form>
+            </div>
+
+            <div class="order-summary-section">
+                <h2>Cart Items</h2>
+                <div class="order-items">
+                    {% for item in cart_items %}
+                        <div class="order-item">
+                            <div class="item-details">
+                                <h4>{{ item.uniform.name }}</h4>
+                                <p class="item-meta">{{ item.selected_size|default:item.uniform.size }} - {{ item.uniform.color }}</p>
+                                <p class="item-qty">Qty: {{ item.quantity }}</p>
+                            </div>
+                            <div class="item-actions">
+                                <div class="item-price">
+                                    ₱{{ item.total_price }}
+                                </div>
+                              <div class="item-buttons">
+    <form method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.uniform.id }}">
+        <button type="submit" name="delete_item" class="btn-remove" title="Remove item">
+            <!-- remove icon here -->
+        </button>
+    </form>
+    <form method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="hidden" name="item_id" value="{{ item.uniform.id }}">
+        <button type="submit" name="place_order_single" class="btn-order-item" title="Order this item">
+            <i class="fas fa-check"></i> Order
+        </button>
+    </form>
+</div>
+
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <hr>
+
+                <div class="summary-calculation">
+                    <div class="calc-row">
+                        <span>Subtotal:</span>
+                        <span>₱{{ cart_total }}</span>
+                    </div>
+                    <div class="calc-row total">
+                        <span>Total Amount:</span>
+                        <span class="final-price">₱{{ cart_total }}</span>
+                    </div>
+                </div>
+
+                <div class="checkout-actions">
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" name="place_order_all" class="btn-order-all">
+            <i class="fas fa-check"></i> Order All Items
+        </button>
+    </form>
+
+    <a href="{% url 'cart' %}" class="btn-back-cart">
+        Back to Cart
+    </a>
+</div>
+
+                    
+                <div class="security-note">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <p>Cash on Hand Payment - please settle on or before the pick-up</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

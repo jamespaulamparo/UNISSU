@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}iSysWear - Choose Your Role{% endblock %}
+
+{% block extra_css %}
+<style>
+.role-select-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.role-select-wrapper {
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+.logo-large {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 30px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+
+.role-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.role-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 50px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.role-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 40px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.role-card {
+  padding: 40px 30px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.role-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 0;
+}
+
+.role-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  border-color: #667eea;
+}
+
+.role-card:hover::before {
+  opacity: 1;
+}
+
+.role-card.admin {
+background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+}
+
+.role-card.student {
+background: linear-gradient(135deg, #ff69b4, #ff1493);
+  color: white;
+}
+
+.role-card h3 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.role-card p {
+  font-size: 1rem;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
+  line-height: 1.5;
+}
+
+.role-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.btn-role {
+  padding: 0;
+  background: none;
+  border: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .role-buttons {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .role-select-wrapper {
+    padding: 20px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="role-select-container">
+  <div class="role-select-wrapper">
+    <img src="{% static 'images/logo.jpg' %}" alt="iSysWear" class="logo-large">
+    
+    <h1 class="role-title">Welcome to iSysWear</h1>
+    <p class="role-subtitle">Please select your role to continue to the appropriate portal</p>
+    
+    <div class="role-buttons">
+      <!-- Admin Role -->
+      <a href="{% url 'adminpanel:admin_login' %}" class="role-card admin">
+        <span class="role-icon">👨‍💼</span>
+        <h3>Admin Panel</h3>
+        <p>Manage products, orders, users, reports and more</p>
+      </a>
+      
+      <!-- Student Role -->
+      <a href="{% url 'login_register' %}" class="role-card student">
+        <span class="role-icon">👨‍🎓</span>
+        <h3>Student Portal</h3>
+        <p>Browse uniforms, place orders, track deliveries</p>
+      </a>
+    </div>
+    
+    <div style="font-size: 0.9rem; color: #888;">
+      Don't have an account? <a href="{% url 'login_register' %}">Student sign up</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

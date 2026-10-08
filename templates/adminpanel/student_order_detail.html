@@ -1,0 +1,86 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block title %}Student {{ student.username }} Orders{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Student Orders: {{ student.username }}</h1>
+    <a href="{% url 'adminpanel:student_orders' %}" class="btn btn-secondary">← Back to Students</a>
+</div>
+
+<div class="student-detail-grid">
+    <div class="student-info">
+        <h2>Profile</h2>
+        <p><strong>Email:</strong> {{ student.email|default:'Not set' }}</p>
+        {% if profile %}
+        <p><strong>Full Name:</strong> {{ profile.full_name }}</p>
+        <p><strong>Phone:</strong> {{ profile.phone_number|default:'Not set' }}</p>
+        <p><strong>Address:</strong> {{ profile.address|default:'Not set'|linebreaks }}</p>
+        {% endif %}
+        <p><strong>Total Orders:</strong> {{ orders.count }}</p>
+        <p><strong>Total Spent:</strong> ${{ orders.aggregate(total=Sum('total_amount')).total|floatformat:2|default:'0.00' }}</p>
+    </div>
+</div>
+
+{% if orders %}
+<h3>Order History ({{ orders.count }})</h3>
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Items Count</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.order_date|date:'M d, Y H:i' }}</td>
+            <td><span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span></td>
+            <td>${{ order.total_amount|floatformat:2 }}</td>
+            <td>{{ order.items.count }}</td>
+            <td>
+                <a href="{% url 'adminpanel:order_detail' order.id %}" class="btn btn-sm btn-primary">View Details</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No orders found for this student.</p>
+{% endif %}
+
+<style>
+.student-detail-grid {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.data-table th, .data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+.data-table th {
+    background: #f8f9fa;
+}
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+}
+.badge-pending { background: #ffc107; }
+.badge-processing { background: #17a2b8; }
+.badge-shipped { background: #28a745; }
+.badge-delivered { background: #007bff; }
+.badge-cancelled { background: #dc3545; }
+</style>
+{% endblock %}

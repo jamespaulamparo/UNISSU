@@ -1,0 +1,422 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #ffffff;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+:root {
+    --primary-pink: #ff4081;
+    --pink-light: #ff77a4;
+    --pink-dark: #e91e63;
+    --brand-green-dark: #ff4081;
+    --brand-green: #ff77a4;
+    --brand-pink-dark: #e91e63;
+    --brand-pink: #ff4081;
+    --brand-cream: #fff8fa;
+    --white: white;
+    --text-dark: #1a1a1a;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.auth-page-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.auth-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.logo-section {
+    flex: 0 0 35%;
+    background: linear-gradient(135deg, var(--primary-pink) 0%, var(--pink-light) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo-section::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+}
+
+.logo-section::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    bottom: -80px;
+    left: -80px;
+}
+
+.logo-container {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.logo-img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 25px;
+    border-radius: 50%;
+    object-fit: contain;
+    border: 5px solid white;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.logo-text h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    letter-spacing: 1px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.logo-text .is-brand {
+    color: var(--brand-cream);
+}
+
+.logo-text .is-brand-dark {
+    color: var(--white);
+}
+
+.logo-text p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    margin-top: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-wrapper {
+    flex: 1;
+    padding: 60px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+.auth-header {
+    margin-bottom: 40px;
+}
+
+.auth-header h2 {
+    color: #1a1a1a;
+    font-size: 36px;
+    margin-bottom: 12px;
+    font-weight: 700;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.auth-header p {
+    color: #888;
+    font-size: 15px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 35px;
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    border-bottom: 2px solid #e8e8e8;
+}
+
+.tab-btn {
+    padding: 15px 18px;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    color: #999;
+    transition: all 0.3s ease;
+    border-radius: 0;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+}
+
+.tab-btn.active {
+    background: transparent;
+    color: var(--brand-green-dark);
+    border-bottom-color: var(--brand-green-dark);
+    box-shadow: none;
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-section h3 {
+    color: #1a1a1a;
+    margin-bottom: 25px;
+    font-size: 22px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    box-sizing: border-box;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--brand-green-dark);
+    background: #fafafa;
+    box-shadow: 0 0 8px rgba(126, 208, 122, 0.15);
+}
+
+.form-group input::placeholder {
+    color: #ccc;
+}
+
+.form-group input.input-error {
+    border-color: #c62828;
+    background: #fff5f5;
+}
+
+.error-message {
+    background: #fff5f5;
+    color: #c62828;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    border-left: 4px solid #c62828;
+    animation: slideIn 0.4s ease;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 13px 18px;
+    background: var(--brand-pink-dark);
+    color: var(--text-dark);
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 8px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.btn-primary:hover {
+    background: var(--brand-pink);
+    box-shadow: 0 10px 28px rgba(255, 177, 192, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 15px rgba(255, 177, 192, 0.2);
+}
+
+.forgot-password {
+    text-align: right;
+    margin-bottom: 16px;
+}
+
+.forgot-password a {
+    color: var(--brand-green-dark);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.forgot-password a:hover {
+    color: var(--brand-green);
+    text-decoration: underline;
+}
+
+.auth-footer {
+    background-color: #fafafa;
+    border-top: 1px solid #e8e8e8;
+    padding: 20px 50px;
+    text-align: center;
+    color: #999;
+    font-size: 13px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .logo-section {
+        flex: 0 0 30%;
+        padding: 40px 30px;
+    }
+    .form-wrapper {
+        padding: 50px 40px;
+    }
+    .auth-header h2 {
+        font-size: 32px;
+    }
+    .logo-text h1 {
+        font-size: 40px;
+    }
+    .logo-img {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-page-container {
+        flex-direction: column;
+        min-height: auto;
+    }
+    .auth-wrapper {
+        flex-direction: column;
+        height: auto;
+    }
+    .logo-section {
+        flex: 0 !important;
+        padding: 40px 30px;
+        min-height: 280px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .form-wrapper {
+        flex: 1;
+        padding: 40px 30px 30px 30px;
+    }
+    .auth-header h2 {
+        font-size: 28px;
+    }
+    .logo-text h1 {
+        font-size: 36px;
+    }
+    .logo-img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+    }
+    .logo-text p {
+        font-size: 14px;
+    }
+    .form-tabs {
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .logo-section {
+        padding: 30px 20px;
+        min-height: 220px;
+    }
+    .form-wrapper {
+        padding: 30px 20px;
+    }
+    .auth-header h2 {
+        font-size: 24px;
+    }
+    .logo-text h1 {
+        font-size: 30px;
+    }
+    .logo-img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+    }
+    .form-group input, .form-group textarea {
+        padding: 11px 12px;
+        font-size: 13px;
+    }
+    .tab-btn {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    .btn-primary {
+        padding: 12px 16px;
+        font-size: 14px;
+    }
+    .auth-footer {
+        padding: 15px 20px;
+        font-size: 12px;
+    }
+}

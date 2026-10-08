@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shop Uniforms - iSysWear{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/uniforms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="shop-container">
+    <div class="container">
+        <h1>Our Uniforms</h1>
+        
+        <div class="shop-content">
+            <!-- Products Grid -->
+            <main class="products-grid-container">
+                {% if uniforms %}
+                    <div class="products-grid">
+                        {% for uniform in uniforms %}
+                            {% include 'components/product_card.html' with uniform=uniform size_label='Multiple Sizes' %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No uniforms found</h3>
+                        <p>Try adjusting your filters</p>
+                        <a href="{% url 'uniforms' %}" class="btn-primary">Clear Filters</a>
+                    </div>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

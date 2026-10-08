@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+.split-layout { display: flex; min-height: 100vh; }
+.split-left { flex: 1; background: linear-gradient(135deg, #EAF4EE 0%, #FFE5EC 100%); display: flex; flex-direction: column; justify-content: center; padding: 4rem; }
+.split-right { flex: 1; background: #FFFFFF; display: flex; justify-content: center; align-items: center; padding: 2rem; }
+
+.left-content h1 { font-size: 3rem; font-weight: 800; color: #0F172A; }
+.left-content p { font-size: 1.2rem; color: #64748B; }
+.back-home { color: #64748B; text-decoration: none; font-weight: 600; display: inline-block; margin-bottom: 2rem; }
+
+.form-container { width: 100%; max-width: 500px; }
+.form-header { text-align: center; margin-bottom: 2rem; }
+.form-header h2 { font-size: 1.8rem; color: #0F172A; }
+.form-header p { color: #64748B; }
+
+.tab-controls { display: flex; background: #F8FAFC; border-radius: 8px; padding: 4px; margin-bottom: 2rem; }
+.tab-btn { flex: 1; padding: 0.75rem; border: none; background: transparent; font-weight: 600; color: #64748B; cursor: pointer; border-radius: 6px; }
+.tab-btn.active { background: #FFFFFF; color: #0F172A; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.input-row { display: flex; gap: 1rem; }
+.input-row .input-group { flex: 1; }
+
+.input-group { margin-bottom: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.input-group label { font-size: 0.85rem; font-weight: 600; color: #0F172A; }
+.form-input { width: 100%; padding: 0.85rem 1rem; border: 1px solid #E2E8F0; border-radius: 8px; font-size: 0.95rem; outline: none; }
+.form-input:focus { border-color: #F4ACB7; }
+
+.btn-solid-pink {
+    width: 100%;
+    background-color: #F4ACB7;
+    color: #FFFFFF;
+    border: none;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+.btn-solid-pink:hover { background-color: #F098A6; }
+
+@media (max-width: 900px) {
+    .split-layout { flex-direction: column; }
+    .split-left { padding: 3rem 2rem; flex: none; }
+}

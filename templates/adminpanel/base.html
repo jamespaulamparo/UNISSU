@@ -1,0 +1,49 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Admin{% endblock %} | iSysWear</title>
+    <link rel="stylesheet" href="{% static 'css/adminpanel.css' %}" />
+  </head>
+  <body>
+    <header class="ap-topbar">
+      <div class="ap-topbar__brand">
+        <a href="{% url 'adminpanel:dashboard' %}">UNISSU &bull; Campus Admin</a>
+      </div>
+
+      <nav class="ap-topbar__nav">
+        <a href="{% url 'adminpanel:dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">Dashboard</a>
+        <a href="{% url 'adminpanel:reports' %}" class="{% if request.resolver_match.url_name == 'reports' %}is-active{% endif %}">Reports</a>
+        <a href="{% url 'adminpanel:orders_list' %}" class="{% if request.resolver_match.url_name|slice:'6:' in 'orders_list order_detail' %}is-active{% endif %}">Orders</a>
+        <a href="{% url 'adminpanel:users_list' %}" class="{% if request.resolver_match.url_name|slice:'6:' in 'users_list user_detail' %}is-active{% endif %}">Users</a>
+        <a href="{% url 'adminpanel:products_list' %}" class="{% if request.resolver_match.url_name|slice:'6:' in 'products_list product_detail' %}is-active{% endif %}">Products</a>
+      </nav>
+
+      <div class="ap-topbar__right">
+        <span class="ap-user">
+          {{ request.user.username }}{% if request.user.is_superuser %} (Superuser){% elif request.user.is_staff %} (Staff){% endif %}
+        </span>
+        <a class="ap-btn ap-btn--ghost" href="{% url 'home' %}">View Store</a>
+        <a class="ap-btn ap-btn--danger" href="{% url 'logout' %}">Sign Out</a>
+      </div>
+    </header>
+
+    <main class="ap-container">
+      {% if messages %}
+        <div class="ap-messages">
+          {% for message in messages %}
+            <div class="ap-message ap-message--{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="ap-footer">
+      <small>UNISSU &bull; DMMMSU NLUC Uniform & Lanyard Issuance Administration</small>
+    </footer>
+  </body>
+</html>

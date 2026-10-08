@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISSU — Access Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/loginAndregister.css' %}">
+</head>
+<body>
+
+<div class="split-layout">
+    <!-- Left Graphic Side -->
+    <div class="split-left">
+        <div class="left-content">
+            <a href="{% url 'home' %}" class="back-home">&larr; Back to Home</a>
+            <h1>UNISSU Portal</h1>
+            <p>Your streamlined campus uniform and gear system.</p>
+        </div>
+    </div>
+
+    <!-- Right Form Side -->
+    <div class="split-right">
+        <div class="form-container">
+            <div class="form-header">
+                <h2>Access Your Account</h2>
+                <p>Sign in or create a new student profile.</p>
+            </div>
+
+            <div class="tab-controls">
+                <button class="tab-btn active" onclick="showTab('login')">Sign In</button>
+                <button class="tab-btn" onclick="showTab('register')">Student Registration</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-tab" class="tab-content active">
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <label>Student Number / Username</label>
+                        {{ login_form.username }}
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        {{ login_form.password }}
+                    </div>
+                    <button type="submit" class="btn-solid-pink">Sign In</button>
+                </form>
+            </div>
+
+            <!-- Register Form (Same Design) -->
+            <div id="register-tab" class="tab-content">
+                <form method="POST" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            {{ register_form.full_name }}
+                        </div>
+                        <div class="input-group">
+                            <label>Student ID</label>
+                            {{ register_form.student_id }}
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Username</label>
+                            {{ register_form.username }}
+                        </div>
+                        <div class="input-group">
+                            <label>Course & Year</label>
+                            {{ register_form.course_year }}
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        {{ register_form.email }}
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label>Password</label>
+                            {{ register_form.password1 }}
+                        </div>
+                        <div class="input-group">
+                            <label>Confirm Password</label>
+                            {{ register_form.password2 }}
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-solid-pink">Complete Registration</button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    function showTab(tabName) {
+        document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName + '-tab').classList.add('active');
+        event.target.classList.add('active');
+    }
+    
+    // Add default styling classes to Django forms
+    document.querySelectorAll('input').forEach(input => {
+        if(input.type !== 'hidden' && input.type !== 'checkbox') {
+            input.classList.add('form-input');
+        }
+    });
+</script>
+</body>
+</html>

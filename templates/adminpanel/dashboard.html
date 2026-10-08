@@ -1,0 +1,173 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<div class="dashboard-summary">
+    <div class="summary-box">
+        <h3>Total Users</h3>
+        <p class="summary-value">{{ kpis.users_total }}</p>
+        <small>{{ kpis.staff_total }} staff members</small>
+    </div>
+    <div class="summary-box">
+        <h3>Total Orders</h3>
+        <p class="summary-value">{{ kpis.orders_total }}</p>
+    </div>
+    <div class="summary-box">
+        <h3>Total Products</h3>
+        <p class="summary-value">{{ kpis.products_total }}</p>
+        <small>{{ kpis.total_stock }} units in stock</small>
+    </div>
+    <div class="summary-box">
+        <h3>Total Revenue</h3>
+        <p class="summary-value">₱{{ kpis.revenue_total|floatformat:2 }}</p>
+    </div>
+</div>
+
+<div class="latest-orders">
+    <div class="section-header">
+        <h2>Latest Orders</h2>
+        <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-sm">View All</a>
+    </div>
+    {% if latest_orders %}
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in latest_orders %}
+            <tr>
+                <td>#{{ order.id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>₱{{ order.total_amount|floatformat:2 }}</td>
+                <td>
+                    <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </td>
+                <td>{{ order.order_date|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-message">No orders yet.</p>
+    {% endif %}
+</div>
+
+<style>
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.summary-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+.summary-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+}
+.summary-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+.summary-box small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+}
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.section-header h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+}
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+.data-table th,
+.data-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.data-table th {
+    background-color: #343a40;
+    color: white;
+    font-weight: 600;
+}
+.data-table tr:hover {
+    background-color: #f8f9fa;
+}
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+.status-pending {
+    background-color: #ffc107;
+    color: #000;
+}
+.status-processing {
+    background-color: #17a2b8;
+    color: white;
+}
+.status-shipped {
+    background-color: #6610f2;
+    color: white;
+}
+.status-delivered {
+    background-color: #28a745;
+    color: white;
+}
+.status-cancelled {
+    background-color: #dc3545;
+    color: white;
+}
+.empty-message {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #666;
+}
+</style>
+{% endblock %}
+
+

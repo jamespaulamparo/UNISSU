@@ -1,0 +1,46 @@
+
+{% extends 'adminpanel/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Admin Dashboard</h1>
+<div class="dashboard-summary">
+    <div class="summary-box">
+        <h2>Total Users</h2>
+        <p>{{ total_users }}</p>
+    </div>
+    <div class="summary-box">
+        <h2>Total Orders</h2>
+        <p>{{ total_orders }}</p>
+    </div>
+    <div class="summary-box">
+        <h2>Total Products</h2>
+        <p>{{ total_products }}</p>
+    </div>
+</div>
+
+<div class="latest-orders">
+    <h2>Latest Orders</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in latest_orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username }}</td>
+                <td>${{ order.total }}</td>
+                <td>{{ order.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

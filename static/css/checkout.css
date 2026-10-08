@@ -1,0 +1,480 @@
+/* Checkout Container */
+.checkout-container {
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #ffffff 0%, #faf2f7 100%);
+    min-height: calc(100vh - 100px);
+}
+
+.checkout-container h1 {
+    font-size: 36px;
+    color: var(--text-dark);
+    margin-bottom: 40px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Checkout Content */
+.checkout-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+}
+
+/* Checkout Form Section */
+.checkout-form-section {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    border: 1px solid var(--border-color);
+}
+
+.checkout-form-section h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--brand-green-dark);
+    padding-bottom: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.checkout-form-section h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: var(--text-dark);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Payment Options */
+.payment-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.payment-option:hover {
+    border-color: var(--brand-green-dark);
+    background: #fff2f7;
+    transform: translateY(-1px);
+}
+
+.payment-option input[type="radio"] {
+    margin-right: 15px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.payment-option i {
+    font-size: 20px;
+    color: var(--brand-green-dark);
+    margin-right: 12px;
+    background: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-option input[type="radio"]:checked + i,
+.payment-option input[type="radio"]:checked + span + i {
+    background: var(--brand-green-dark);
+    color: white;
+}
+
+/* Terms Agreement */
+.terms-agreement {
+    margin: 25px 0;
+    padding: 18px;
+    background: #fff2f7;
+    border-radius: 10px;
+    border: 1px solid rgba(211, 0, 95, 0.2);
+}
+
+.terms-agreement label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-dark);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.terms-agreement input[type="checkbox"] {
+    margin-right: 12px;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+/* Buttons */
+.btn-place-order {
+    width: 100%;
+    padding: 10px 14px; /* reduced */
+    font-size: 13px; /* reduced */
+    margin-top: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-place-order:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(211, 0, 95, 0.25);
+}
+.btn-order-item {
+    background: var(--brand-green-dark); /* same brand color */
+    color: #fff;
+    border: none;
+    padding: 4px 8px;    /* very compact padding */
+    border-radius: 4px;
+    font-size: 11px;     /* smaller font */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    width: auto;         /* shrink to fit content */
+    text-align: center;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.btn-order-item i {
+    margin-right: 4px;   /* small spacing for the check icon */
+    font-size: 11px;     /* icon matches text size */
+}
+
+.btn-order-item:hover {
+    background: #b8005a; /* same hover color */
+    transform: translateY(-1px);
+    box-shadow: 0 1px 4px rgba(211, 0, 95, 0.25);
+}
+/* Order Summary Section */
+.order-summary-section {
+    background: white;
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+    border: 1px solid var(--border-color);
+}
+
+.order-summary-section h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--brand-green-dark);
+    padding-bottom: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.order-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0; /* reduced */
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.order-item:hover {
+    background-color: #faf2f7;
+}
+
+.item-details h4 {
+    font-size: 13px; /* reduced */
+    color: var(--text-dark);
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.item-meta,
+.item-qty {
+    font-size: 11px; /* reduced */
+    color: var(--text-light);
+    font-weight: 500;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.item-price {
+    font-weight: 700;
+    color: var(--brand-green-dark);
+    text-align: right;
+    font-size: 13px; /* reduced */
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.order-summary-section hr {
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Summary Calculation */
+.summary-calculation {
+    font-size: 12px; /* reduced */
+}
+
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+    padding: 4px 0; /* tighter */
+    font-size: 12px; /* reduced */
+}
+
+.calc-row span:first-child {
+    color: var(--text-light);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.calc-row.total {
+    font-size: 14px; /* reduced */
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--brand-green-dark);
+}
+
+.final-price {
+    color: var(--brand-green-dark);
+    font-size: 16px; /* reduced */
+    font-weight: 700;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Security Note */
+.security-note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 14px;
+    background: #fff2f7;
+    border-radius: 8px;
+    border-left: 3px solid var(--brand-green-dark);
+    border: 1px solid rgba(211, 0, 95, 0.2);
+}
+
+.security-note i {
+    color: var(--brand-green-dark);
+    font-size: 16px;
+    background: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.security-note p {
+    font-size: 12px;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.order-summary-section hr {
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Summary Calculation */
+.summary-calculation {
+    font-size: 12px; /* reduced */
+}
+
+.calc-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+    padding: 4px 0; /* tighter */
+    font-size: 12px; /* reduced */
+}
+
+.calc-row span:first-child {
+    color: var(--text-light);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.calc-row.total {
+    font-size: 14px; /* reduced */
+    font-weight: 600;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--brand-green-dark);
+}
+
+.final-price {
+    color: var(--brand-green-dark);
+    font-size: 16px; /* reduced */
+    font-weight: 700;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Security Note */
+.security-note {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 14px;
+    background: #fff2f7;
+    border-radius: 8px;
+    border-left: 3px solid var(--brand-green-dark);
+    border: 1px solid rgba(211, 0, 95, 0.2);
+}
+
+.security-note i {
+    color: var(--brand-green-dark);
+    font-size: 16px;
+    background: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.security-note p {
+    font-size: 12px;
+    color: var(--brand-green-dark);
+    margin: 0;
+    font-weight: 600;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--brand-green-dark);
+    box-shadow: 0 0 0 3px rgba(211, 0, 95, 0.1);
+}
+.checkout-actions {
+    display: flex;
+    flex-direction: column; /* stack vertically */
+    gap: 10px;              /* spacing between buttons */
+    margin-top: 20px;
+}
+
+.checkout-actions {
+    display: flex;
+    flex-direction: column;   /* stack vertically */
+    align-items: center;      /* center horizontally */
+    gap: 12px;                /* spacing between buttons */
+    margin-top: 20px;
+}
+
+/* Order All Items Button - larger */
+.btn-order-all {
+    background: var(--brand-green-dark);
+    color: rgba(255, 255, 255, 0.9);
+    border: none;
+    padding: 12px 20px;   /* larger padding */
+    border-radius: 6px;
+    font-size: 15px;      /* slightly larger font */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 260px;         /* wider */
+    text-align: center;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.btn-order-all:hover {
+    background: #b8005a;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(211, 0, 95, 0.25);
+}
+
+/* Back to Cart Button - smaller */
+.btn-back-cart {
+    background: #fff;
+    color: var(--brand-green-dark);
+    border: 1px solid var(--brand-green-dark);
+    padding: 6px 12px;    /* smaller padding */
+    border-radius: 6px;
+    font-size: 12px;      /* smaller font */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    width: 180px;         /* narrower */
+    text-align: center;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.btn-back-cart:hover {
+    background: #faf2f7;
+    transform: translateY(-1px);
+}

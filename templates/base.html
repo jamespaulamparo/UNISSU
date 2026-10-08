@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}UNISSU Portal{% endblock %}</title>
+    <!-- Modern Font & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Core Design System -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    
+    <!-- Premium Top Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <!-- Brand -->
+            <a href="{% url 'home' %}" class="nav-brand">
+                <div class="brand-icon">is</div>
+                <span class="brand-text">UNISSU PORTAL</span>
+            </a>
+            
+            <!-- Center Links -->
+            <div class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link">Home</a>
+                <a href="{% url 'uniforms' %}" class="nav-link">Catalog</a>
+            </div>
+            
+            <!-- Right Actions -->
+            <div class="nav-right">
+                <a href="{% url 'cart' %}" class="cart-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    {% if cart_items_count > 0 %}
+                        <span class="cart-badge">{{ cart_items_count }}</span>
+                    {% endif %}
+                </a>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="user-profile-btn">
+                        <div class="user-avatar"><i class="fas fa-user"></i></div>
+                        <span>{{ user.username }}</span>
+                    </a>
+                    
+                    {% if user.is_staff or user.is_superuser or user.profile.is_admin %}
+                        <a href="{% url 'adminpanel:dashboard' %}" class="nav-link" style="color: var(--pastel-pink-dark);">Admin</a>
+                    {% endif %}
+                    
+                    <a href="{% url 'logout' %}" class="nav-link" style="color: var(--slate-400); font-size: 0.85rem;"><i class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-primary-outline">Student Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Alerts / Messages -->
+    {% if messages %}
+    <div style="max-width: 1200px; margin: 1rem auto; padding: 0 2rem;">
+        {% for message in messages %}
+            <div style="background: var(--bg-surface); border: var(--border-subtle); padding: 1rem 1.5rem; border-radius: var(--radius-sm); margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; box-shadow: var(--shadow-sm);">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Page Content Injection -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

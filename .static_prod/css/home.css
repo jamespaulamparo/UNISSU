@@ -1,0 +1,100 @@
+/* --- Global Variables --- */
+:root {
+    --brand-pink-dark: #d3005f;
+    --brand-pink-light: #e48aa9;
+    --brand-pink: #ffb6c1;
+    --white: #ffffff;
+    --text-dark: #333333;
+    --text-light: #666666;
+    --border-color: #eeeeee;
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    background: linear-gradient(135deg, var(--brand-pink-dark) 0%, var(--brand-pink-light) 100%);
+    color: var(--white);
+    padding: 100px 20px;
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content h1 {
+    font-size: 56px;
+    margin-bottom: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content .btn-primary {
+    display: inline-block;
+    background-color: #1a1a1a;
+    color: white;
+    font-weight: 700;
+    padding: 18px 45px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.hero-content .btn-primary:hover {
+    background-color: #000;
+    transform: translateY(-3px);
+}
+
+/* --- Features Section --- */
+.features-section {
+    padding: 60px 20px;
+    background: #fff;
+    margin-bottom: 60px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-color);
+}
+
+.feature-card i {
+    font-size: 40px;
+    color: var(--brand-pink-dark);
+    margin-bottom: 15px;
+}
+
+/* --- CTA Section --- */
+.cta-section {
+    background: linear-gradient(135deg, var(--brand-pink-dark) 0%, var(--brand-pink) 100%);
+    color: var(--white);
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 12px;
+    margin-bottom: 40px; /* Added margin since it is now the last element */
+}
+
+.cta-section h2 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.cta-section p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .hero-content h1 { font-size: 36px; }
+    .cta-section h2 { font-size: 28px; }
+}

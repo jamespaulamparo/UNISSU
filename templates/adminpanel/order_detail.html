@@ -1,0 +1,170 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block title %}Order #{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Order #{{ order.id }}</h1>
+    <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-secondary">&larr; Back to Orders</a>
+</div>
+
+<div class="order-detail-container">
+    <div class="order-info-card">
+        <h2>Customer Information</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Customer Name:</label>
+                <span>{{ order.customer_name }}</span>
+            </div>
+            <div class="info-item">
+                <label>Email:</label>
+                <span>{{ order.email }}</span>
+            </div>
+            <div class="info-item">
+                <label>Phone:</label>
+                <span>{{ order.phone|default:"N/A" }}</span>
+            </div>
+            <div class="info-item">
+                <label>Address:</label>
+                <span>{{ order.address }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="order-info-card">
+        <h2>Order Status</h2>
+        <form method="post" action="{% url 'adminpanel:update_order_status' order.id %}">
+            {% csrf_token %}
+            <div class="status-form">
+                <label>Current Status:</label>
+                <select name="status" class="status-select">
+                    <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
+                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
+                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Update Status</button>
+            </div>
+        </form>
+        <div class="order-meta">
+            <p><strong>Order Date:</strong> {{ order.order_date|date:"F d, Y at g:i A" }}</p>
+            <p><strong>Last Updated:</strong> {{ order.updated_at|date:"F d, Y at g:i A" }}</p>
+        </div>
+    </div>
+
+    <div class="order-info-card">
+        <h2>Order Summary</h2>
+        <div class="order-total">
+            <span>Total Amount:</span>
+            <strong>₱{{ order.total_amount|floatformat:2 }}</strong>
+        </div>
+    </div>
+</div>
+
+<style>
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.page-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+.order-detail-container {
+    display: grid;
+    gap: 20px;
+}
+.order-info-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.order-info-card h2 {
+    margin: 0 0 15px 0;
+    font-size: 1.1rem;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+.info-item label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 4px;
+}
+.info-item span {
+    font-size: 1rem;
+    color: #333;
+}
+.status-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.status-form label {
+    font-weight: 500;
+}
+.status-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    min-width: 150px;
+}
+.order-meta {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+.order-meta p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2rem;
+}
+.order-total strong {
+    color: #28a745;
+    font-size: 1.5rem;
+}
+.btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+}
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+</style>
+{% endblock %}
+
+

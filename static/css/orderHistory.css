@@ -1,0 +1,270 @@
+/* Order History Page Styles - Modern Responsive Table */
+.order-history-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: 'Ubuntu', 'Lato', system-ui, sans-serif;
+}
+
+.order-history-container h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.order-history-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--brand-green), var(--brand-green-dark));
+    border-radius: 2px;
+}
+
+/* Table Container */
+.orders-table-container {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* Order History Table */
+.order-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.order-history-table thead {
+    background: linear-gradient(135deg, var(--brand-green-dark) 0%, var(--brand-green) 100%);
+    color: var(--white);
+}
+
+.order-history-table th {
+    padding: 1.25rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.order-history-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.order-history-table tbody tr:nth-child(even) {
+    background: rgba(244, 242, 247, 0.6);
+}
+
+.order-history-table tbody tr:hover {
+    background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(228, 138, 169, 0.15);
+}
+
+.order-history-table td {
+    padding: 1.25rem 1rem;
+    vertical-align: middle;
+}
+
+/* Status Badges - Consistent with theme */
+.status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    color: #856404;
+}
+
+.status-processing {
+    background: linear-gradient(135deg, #cce7ff, #a3d4ff);
+    color: #084298;
+}
+
+.status-shipped {
+    background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+    color: #0c5460;
+}
+
+.status-delivered {
+    background: linear-gradient(135deg, #d4edda, #b8e6b8);
+    color: #155724;
+}
+
+.status-cancelled {
+    background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+    color: #721c24;
+}
+
+/* Actions Column */
+.order-history-table .btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.order-history-table .btn-primary {
+    background: var(--white);
+    color: var(--brand-green-dark);
+    border: 1px solid var(--brand-green-dark);
+}
+
+.order-history-table .btn-primary:hover {
+    background: var(--brand-green-dark);
+    color: var(--white);
+    transform: translateY(-1px);
+}
+
+.order-history-table .btn-secondary {
+    background: transparent;
+    color: var(--brand-green);
+    border: 1px solid var(--brand-green);
+}
+
+.order-history-table .btn-secondary:hover {
+    background: var(--brand-green);
+    color: var(--white);
+}
+
+/* Empty State */
+.no-orders {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
+    border-radius: 16px;
+    border: 2px dashed var(--border-color);
+}
+
+.no-orders p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.no-orders a {
+    @extend .btn-primary;
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .order-history-container {
+        padding: 2rem 1rem;
+    }
+
+    .order-history-container h2 {
+        font-size: 2rem;
+    }
+
+    .orders-table-container {
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .order-history-table {
+        font-size: 0.9rem;
+    }
+
+    .order-history-table thead {
+        display: none;
+    }
+
+    .order-history-table tbody,
+    .order-history-table tr,
+    .order-history-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .order-history-table tr {
+        background: var(--white);
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        padding: 1rem;
+        position: relative;
+    }
+
+    .order-history-table tr::before {
+        content: attr(data-order-id);
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--brand-green-dark);
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    .order-history-table td {
+        padding: 0.75rem 0;
+        border: none;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    .order-history-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        font-weight: 600;
+        color: var(--text-light);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+    /* Specific labels for mobile */
+    .order-history-table td[data-label="Order ID"]::before { content: "Order"; }
+    .order-history-table td[data-label="Date"]::before { content: "Date"; }
+    .order-history-table td[data-label="Status"]::before { content: "Status"; }
+    .order-history-table td[data-label="Total"]::before { content: "Total"; }
+    .order-history-table td[data-label="Items"]::before { content: "# Items"; }
+    .order-history-table td[data-label="Actions"]::before { content: "Actions"; display: none; }
+
+    .order-history-table td:last-child {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .order-history-table .btn-sm {
+        flex: 1;
+        margin: 0.25rem;
+        text-align: center;
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .order-history-table .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.6rem;
+    }
+}
+

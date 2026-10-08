@@ -1,0 +1,15 @@
+Add this view to users/views.py:
+
+from django.shortcuts import redirect
+from django.urls import reverse
+
+def role_select_view(request):
+    \"\"\"Role selection landing page. Redirect based on choice.\"\"\"
+    role = request.GET.get('role')
+    if role == 'admin':
+        return redirect('adminpanel:admin_login')
+    return redirect('login_register')
+
+Add this url to users/urls.py urlpatterns first:
+
+path('', views.role_select_view, name='role_select'),

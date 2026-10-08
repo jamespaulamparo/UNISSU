@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - iSysWear</title>
+<link rel="stylesheet" href="{% static 'css/adminpanel.css' %}">
+</head>
+<body>
+    <div class="admin-auth-container">
+        <div class="admin-auth-wrapper">
+            <!-- Logo Left Side -->
+            <div class="admin-logo-section">
+                <div class="admin-logo-container">
+                    <img src="{% static 'images/logo.jpg' %}" alt="iSysWear Admin" class="admin-logo-img">
+                    <div class="admin-logo-text">
+                        <h1>Admin Panel</h1>
+                        <p>Sign in with your admin credentials</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Right Side -->
+            <div class="admin-form-wrapper">
+                <div class="admin-auth-header">
+                    <h2>Admin Login</h2>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="admin-alert admin-alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="admin-form-group">
+                        <label for="id_username">Admin Username</label>
+                        <input type="text" name="username" id="id_username" required placeholder="Enter admin username">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="id_password">Password</label>
+                        <input type="password" name="password" id="id_password" required placeholder="Enter password">
+                    </div>
+                    <button type="submit" class="btn-admin-primary">Login to Admin Panel</button>
+                </form>
+
+                <div class="admin-login-footer">
+                    <a href="{% url 'home' %}">← Back to User Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

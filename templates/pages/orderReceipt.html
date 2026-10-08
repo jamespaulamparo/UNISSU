@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Receipt #{{ order.id }} - Order Receipt{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/orderDetails.css' %}">
+<style>
+    @media print {
+        body * { visibility: hidden; }
+        .receipt-printable, .receipt-printable * { visibility: visible; }
+        .receipt-printable { position: absolute; left: 0; top: 0; width: 100%; }
+        nav, footer, .btn { display: none !important; }
+        body { font-size: 12pt; }
+    }
+    .receipt-header { text-align: center; margin-bottom: 30px; }
+    .receipt-logo { max-width: 150px; height: auto; margin-bottom: 10px; }
+    .receipt-id { font-size: 24pt; font-weight: bold; color: var(--brand-blue-dark); }
+    .receipt-table { width: 100%; margin: 20px 0; }
+    .receipt-table th, .receipt-table td { padding: 12px; border: 1px solid #ddd; }
+    .receipt-total { font-size: 18pt; font-weight: bold; text-align: right; margin-top: 20px; }
+    .receipt-footer { margin-top: 40px; text-align: center; font-style: italic; color: #666; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="order-detail-container receipt-printable">
+    <!-- Receipt Header -->
+    <div class="receipt-header">
+        <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="receipt-logo" onerror="this.style.display='none'">
+        <h1>Order Receipt</h1>
+        <div class="receipt-id">Receipt #{{ order.id }}</div>
+        <p>Date: {{ order.order_date|date:"F d, Y H:i" }}</p>
+        <p>Status: <span style="color: {% if order.status == 'delivered' %}green{% elif order.status == 'cancelled' %}red{% else %}orange{% endif %};">{{ order.get_status_display }}</span></p>
+    </div>
+
+    <!-- Customer Info -->
+    <div class="section">
+        <h2>Bill To:</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <label>Name</label>
+                <p>{{ order.customer_name }}</p>
+            </div>
+            <div class="info-item">
+                <label>Email</label>
+                <p>{{ order.email }}</p>
+            </div>
+            <div class="info-item">
+                <label>Phone</label>
+                <p>{{ order.phone|default:"N/A" }}</p>
+            </div>
+            <div class="info-item">
+                <label>Address</label>
+                <p>{{ order.address }}</p>
+            </div>
+    </div>
+
+    <!-- Items Table -->
+    <div class="section">
+        <h2>Order Items</h2>
+        <table class="items-table receipt-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₱{{ item.price }}</td>
+                    <td>₱{{ item.get_total_price }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No items</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="summary">
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span>₱{{ order.get_total }}</span>
+            </div>
+            <div class="summary-row total">
+                <span>Total Amount:</span>
+                <span>₱{{ order.total_amount }}</span>
+            </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="receipt-footer">
+        <p>Thank you for your order!</p>
+        <p>This is your official receipt. Please keep for your records.</p>
+        <small>Generated on {{ order.updated_at|date:"F d, Y H:i" }}</small>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="javascript:window.print()" class="btn btn-primary">🖨️ Print Receipt</a>
+        <a href="{% url 'orders:order_history' %}" class="btn btn-secondary">← Back to History</a>
+    </div>
+{% endblock %}

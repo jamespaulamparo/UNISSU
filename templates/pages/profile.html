@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - iSysWear{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="container">
+        <h1>My Profile</h1>
+
+        {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+
+        <div class="profile-content"> 
+            <!-- Profile Information -->
+            <div class="profile-section" id="personal-info-section">
+                <h2>Personal Information</h2>
+
+                <div class="profile-info-grid" id="display-info">
+                    <div class="info-row">
+                        <label>Username</label>
+                        <p>{{ user.username }}</p>
+                    </div>
+                    <div class="info-row">
+                        <label>Student / ID Number</label>
+                        <p>{{ profile.student_id|default:"Not provided" }}</p>
+                    </div>
+                    <div class="info-row">
+                        <label>Full Name</label>
+                        <p>{{ profile.full_name|default:"Not provided" }}</p>
+                    </div>
+                    <div class="info-row">
+                        <label>Program & Year Level</label>
+                        <p>{{ profile.course_year|default:"Not provided" }}</p>
+                    </div>
+                    <div class="info-row">
+                        <label>Email Address</label>
+                        <p>{{ user.email|default:"Not provided" }}</p>
+                    </div>
+                    <div class="info-row">
+                        <label>Phone Number</label>
+                        <p>{{ profile.phone_number|default:"Not provided" }}</p>
+                    </div>
+                    <div class="info-row">
+                        <label>Address</label>
+                        <p>{{ profile.address|default:"Not provided" }}</p>
+                    </div> 
+                    <div class="info-row">
+                        <label>Member Since</label>
+                        <p>{{ user.date_joined|date:"M d, Y" }}</p>
+                    </div>
+                </div>
+
+                <form method="post" id="profile-form" style="display: none; margin-top: 20px;">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_username">Username</label>
+                        <input type="text" id="id_username" class="form-control" value="{{ user.username }}" disabled>
+                        <small style="color: var(--text-light);">Username cannot be changed</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_student_id">Student / ID Number</label>
+                        <input type="text" name="student_id" id="id_student_id" class="form-control" value="{{ profile.student_id|default:'' }}" placeholder="e.g. 2023-1029-A">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_full_name">Full Name</label>
+                        <input type="text" name="full_name" id="id_full_name" class="form-control" value="{{ profile.full_name|default:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_course_year">Program & Year Level</label>
+                        <input type="text" name="course_year" id="id_course_year" class="form-control" value="{{ profile.course_year|default:'' }}" placeholder="e.g. BS Information Systems 3-A">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Email Address</label>
+                        <input type="email" name="email" id="id_email" class="form-control" value="{{ profile_form.email.value|default:user.email }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_phone_number">Phone Number</label>
+                        <input type="text" name="phone_number" id="id_phone_number" class="form-control" value="{{ profile_form.phone_number.value|default:'' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id_address">Address</label>
+                        <textarea name="address" id="id_address" class="form-control" rows="3">{{ profile_form.address.value|default:'' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Member Since</label>
+                        <input type="text" class="form-control" value="{{ user.date_joined|date:'M d, Y' }}" disabled>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" id="cancel-edit" class="btn-secondary">Cancel</button>
+                    </div>
+                </form>
+
+                <a href="#" id="edit-info" class="btn-secondary" style="margin-top: 20px; display: inline-block;">
+                    <i class="fas fa-edit"></i> Edit Information
+                </a>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="profile-section">
+                <h2>Recent Orders</h2>
+                {% with recent_orders=user.orders.all|slice:":3" %}
+                    {% if recent_orders %}
+                        <div class="recent-orders">
+                            {% for order in recent_orders %}
+                                <div class="recent-order-card">
+                                    <div class="order-number">#{{ order.id }}</div>
+                                    <div class="order-date">{{ order.order_date|date:"M d, Y" }}</div>
+                                    <div class="order-items">{{ order.items.all|length }} item(s)</div>
+                                    <div class="order-total">₱{{ order.total_amount|floatformat:2 }}</div>
+                                    <div class="order-status">
+                                        <span class="status-badge status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+                                    </div>
+                                    <a href="{% url 'orders:order_details' order.id %}" class="btn-link">View</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a href="{% url 'orders:order_history' %}" class="btn-secondary" style="margin-top: 15px;">View All Orders</a>
+                    {% else %}
+                        <p class="no-items">You haven't placed any orders yet.</p>
+                        <a href="{% url 'uniforms' %}" class="btn-primary">Start Shopping</a>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Account Settings -->
+            <div class="profile-section">
+                <h2>Account Settings</h2>
+                <div class="settings-list">
+                    <a href="{% url 'change_password' %}" class="setting-item">
+                        <i class="fas fa-lock"></i>
+                        <div>
+                            <h4>Change Password</h4>
+                            <p>Update your account password</p>
+                        </div>
+                    </a>
+
+
+
+                </div>
+            </div>
+
+            <!-- Danger Zone -->
+            <div class="profile-section danger-zone">
+                <h2>Danger Zone</h2>
+                <p>Be careful with these actions. They cannot be undone.</p>
+                <div class="danger-actions">
+                    <button class="btn-danger" id="logout-btn" data-logout-url="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <a href="{% url 'delete_account' %}" class="btn-danger" onclick="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
+                        <i class="fas fa-trash"></i> Delete Account
+                    </a> 
+                </div>
+            </div>
+        </div>
+    </div> 
+
+<!-- script to toggle edit form -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editBtn = document.getElementById('edit-info');
+        const cancelBtn = document.getElementById('cancel-edit');
+        const displayInfo = document.getElementById('display-info');
+        const form = document.getElementById('profile-form');
+
+        if (editBtn) {
+            editBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                displayInfo.style.display = 'none';
+                form.style.display = 'block';
+                editBtn.style.display = 'none';
+            });
+        }
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                displayInfo.style.display = 'block';
+                form.style.display = 'none';
+                editBtn.style.display = 'inline-block';
+            });
+        }
+    });
+</script>
+{% endblock %}

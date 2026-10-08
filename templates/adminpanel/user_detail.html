@@ -1,0 +1,193 @@
+{% extends 'adminpanel/base.html' %}
+{% load static %}
+
+{% block title %}User Detail{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>User: {{ u.username }}</h1>
+    <div class="page-actions">
+        <a href="{% url 'adminpanel:users_list' %}" class="btn btn-secondary">← Back to Users</a>
+    </div>
+</div>
+
+<div class="user-detail-grid">
+    <div class="user-info-card">
+        <h2>Account Information</h2>
+        <dl>
+            <dt>Username</dt>
+            <dd>{{ u.username }}</dd>
+            <dt>Email</dt>
+            <dd>{{ u.email|default:"No email" }}</dd>
+            <dt>Full Name</dt>
+            <dd>{{ profile.full_name|default:"Not set" }}</dd>
+            <dt>Phone</dt>
+            <dd>{{ profile.phone_number|default:"Not set" }}</dd>
+            <dt>Address</dt>
+            <dd>{{ profile.address|default:"Not set"|linebreaks }}</dd>
+            <dt>Joined</dt>
+            <dd>{{ u.date_joined|date:"M d, Y H:i" }}</dd>
+            <dt>Last Login</dt>
+            <dd>{{ u.last_login|date:"M d, Y H:i"|default:"Never" }}</dd>
+            <dt>Staff</dt>
+            <dd>{% if u.is_staff %}Yes{% else %}No{% endif %}</dd>
+            <dt>Superuser</dt>
+            <dd>{% if u.is_superuser %}Yes{% else %}No{% endif %}</dd>
+            <dt>Active</dt>
+            <dd>{% if u.is_active %}Yes{% else %}No{% endif %}</dd>
+        </dl>
+    </div>
+
+    <div class="user-actions-card">
+        <h2>Actions</h2>
+        <div class="action-buttons">
+            {% if not u.is_superuser %}
+            <form method="post" action="" style="display: inline;" onsubmit="return confirm('Toggle staff status?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="toggle_staff">
+                <button type="submit" class="btn btn-warning">
+                    {% if u.is_staff %}Remove Staff{% else %}Make Staff{% endif %}
+                </button>
+            </form>
+            {% endif %}
+            <form method="post" action="" style="display: inline;" onsubmit="return confirm('Toggle active status?');">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="toggle_active">
+                <button type="submit" class="btn {% if u.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                    {% if u.is_active %}Deactivate{% else %}Activate{% endif %}
+                </button>
+            </form>
+            {% if not u.is_staff and u.orders.exists %}
+            <a href="{% url 'adminpanel:student_order_detail' u.id %}" class="btn btn-info">View Orders</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if not u.is_staff and u.orders.exists %}
+    <div class="user-orders-section">
+        <h2>User Orders ({{ u.orders.count }})</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in u.orders.all|slice:":5" %}
+                <tr>
+                    <td>#{{ order.id }}</td>
+                    <td>{{ order.order_date|date:'M d, Y' }}</td>
+                    <td>{{ order.status|title }}</td>
+                    <td>${{ order.total_amount|floatformat:2 }}</td>
+                    <td><a href="{% url 'adminpanel:order_detail' order.id %}" class="btn btn-sm btn-primary">Details</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
+    {% if profile and profile.assigned_products.exists %}
+    <div class="user-products-section">
+        <h2>Assigned Products ({{ profile.assigned_products.count }})</h2>
+        <p><a href="{% url 'adminpanel:products_list' %}?user_id={{ u.id }}" class="btn btn-primary">Manage in Products</a></p>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Size/Gender</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Assigned Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in profile.assigned_products.all|slice:":10" %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.get_size_display }} / {{ product.get_gender_display }}</td>
+                        <td>${{ product.price|floatformat:2 }}</td>
+                        <td>{{ product.stock }}</td>
+                        <td>{{ product.assigned_students.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.user-detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+.user-info-card, .user-actions-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.user-info-card h2, .user-actions-card h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+dl {
+    margin: 0;
+}
+dt {
+    font-weight: 600;
+    color: #666;
+    margin-top: 15px;
+}
+dd {
+    margin: 0 0 15px 0;
+    color: #333;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+.page-actions .btn {
+    padding: 10px 20px;
+}
+.action-buttons form {
+    margin-right: 10px;
+}
+.user-orders-section, .user-products-section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    grid-column: 1 / -1;
+}
+.user-orders-section h2, .user-products-section h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+@media (max-width: 768px) {
+    .user-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+
+{% endblock %}

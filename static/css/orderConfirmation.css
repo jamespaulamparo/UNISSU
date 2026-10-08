@@ -1,0 +1,361 @@
+/* Order Confirmation */
+.confirmation-container {
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+    min-height: calc(100vh - 100px);
+}
+
+.confirmation-content {
+    max-width: 700px;
+    margin: 0 auto;
+    background: white;
+    padding: 45px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Enhanced background pattern */
+.confirmation-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(66, 133, 244, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30px, -30px);
+}
+
+.confirmation-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(244, 67, 54, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-20px, 30px);
+}
+
+.confirmation-icon {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.confirmation-icon i {
+    font-size: 100px;
+    color: var(--success);
+    animation: float 2s ease-in-out infinite;
+    text-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.confirmation-content h1 {
+    text-align: center;
+    font-size: 32px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.confirmation-message {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 30px;
+    font-size: 16px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Order Details Card */
+.order-details-card {
+    background: var(--light-bg);
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.order-header h2 {
+    font-size: 18px;
+    color: var(--text-dark);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.order-number {
+    background: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: var(--brand-green-dark);
+    font-size: 14px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.info-item label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-light);
+    font-size: 12px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.info-item p {
+    color: var(--text-dark);
+    font-weight: 500;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.amount {
+    font-size: 20px;
+    color: var(--brand-green-dark);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Ordered Items */
+.ordered-items {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.ordered-items h3 {
+    margin-bottom: 20px;
+    color: var(--text-dark);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.ordered-items h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-green), var(--brand-green-dark));
+    border-radius: 2px;
+}
+
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.item-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.08);
+}
+
+.item-info h4 {
+    margin-bottom: 4px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.item-specs {
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.item-qty {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-light);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.item-price {
+    text-align: right;
+}
+
+.unit-price {
+    display: block;
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.total-price {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* What's Next */
+.what-next {
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.what-next h3 {
+    margin-bottom: 20px;
+    color: var(--text-dark);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.what-next h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand-blue), var(--brand-blue-dark));
+    border-radius: 2px;
+}
+
+.steps {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.step {
+    display: flex;
+    gap: 15px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.03);
+}
+
+.step:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: rgba(0,0,0,0.08);
+}
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-dark));
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(33, 150, 243, 0.3);
+}
+
+.step-content h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text-dark);
+}
+
+.step-content p {
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.4;
+}
+
+/* Confirmation Actions */
+.confirmation-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.confirmation-actions a {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+}
+
+.confirmation-actions .btn-secondary {
+    border: 2px solid var(--brand-green-dark);
+}
+
+/* Contact Support */
+.contact-support {
+    text-align: center;
+    padding: 20px;
+    background: var(--light-bg);
+    border-radius: 8px;
+    color: var(--text-light);
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+.contact-support a {
+    color: var(--brand-green-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-family: 'Ubuntu', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+    .confirmation-content {
+        padding: 20px;
+    }
+
+    .order-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .item-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .steps {
+        grid-template-columns: 1fr;
+    }
+
+    .confirmation-actions {
+        flex-direction: column;
+    }
+}

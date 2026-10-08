@@ -1,0 +1,452 @@
+/* Admin Panel Base Styles */
+
+/* Reset and Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f5f6fa;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Topbar */
+.ap-topbar {
+    background-color: #2c3e50;
+    color: white;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ap-topbar__brand a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.ap-topbar__nav {
+    display: flex;
+    gap: 20px;
+}
+
+.ap-topbar__nav a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    padding: 20px 10px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s;
+}
+
+.ap-topbar__nav a:hover,
+.ap-topbar__nav a.is-active {
+    color: white;
+    border-bottom-color: #3498db;
+}
+
+.ap-topbar__right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ap-user {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.ap-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.ap-btn--ghost {
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.5);
+}
+
+.ap-btn--ghost:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.ap-btn--danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.ap-btn--danger:hover {
+    background-color: #c0392b;
+}
+
+.ap-btn--primary {
+    background-color: #3498db;
+    color: white;
+}
+
+.ap-btn--primary:hover {
+    background-color: #2980b9;
+}
+
+/* Container */
+.ap-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* Messages */
+.ap-messages {
+    margin-bottom: 20px;
+}
+
+.ap-message {
+    padding: 12px 20px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.ap-message--success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.ap-message--error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.ap-message--info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.ap-message--warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* Footer */
+.ap-footer {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 40px;
+}
+
+/* Common Table Styles */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.data-table th,
+.data-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table th {
+    background-color: #34495e;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.data-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-processing {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.status-shipped {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-delivered {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ap-topbar {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+    }
+    
+    .ap-topbar__nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 10px;
+    }
+    
+    .ap-topbar__right {
+        margin-top: 10px;
+    }
+    
+    .data-table {
+        font-size: 0.9rem;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 10px 8px;
+    }
+}
+
+/* Admin Login Side-by-Side Layout */
+.admin-auth-container {
+    display: flex;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.admin-auth-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.admin-logo-section {
+    flex: 0 0 35%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-logo-section::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+}
+
+.admin-logo-section::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    bottom: -80px;
+    left: -80px;
+}
+
+.admin-logo-container {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.admin-logo-img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 25px;
+    border-radius: 50%;
+    object-fit: contain;
+    border: 5px solid white;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.admin-logo-text h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    letter-spacing: 1px;
+}
+
+.admin-logo-text p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    margin-top: 15px;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.admin-form-wrapper {
+    flex: 1;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+.admin-auth-header {
+    margin-bottom: 40px;
+}
+
+.admin-auth-header h2 {
+    color: #1a1a1a;
+    font-size: 36px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.admin-form-group {
+    margin-bottom: 25px;
+}
+
+.admin-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+}
+
+.admin-form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.admin-form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+    background: #fff8fa;
+}
+
+.btn-admin-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-admin-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+.admin-login-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 14px;
+    color: #666;
+}
+
+.admin-login-footer a {
+    color: #667eea;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.admin-login-footer a:hover {
+    color: #764ba2;
+}
+
+.admin-alert {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    border-left: 4px solid #667eea;
+}
+
+.admin-alert-error {
+    background: #fff5f5;
+    color: #c62828;
+    border-left-color: #c62828;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-auth-container {
+        flex-direction: column;
+    }
+    .admin-auth-wrapper {
+        flex-direction: column;
+        height: auto;
+    }
+    .admin-logo-section {
+        flex: none;
+        padding: 40px 30px;
+        min-height: 280px;
+    }
+    .admin-form-wrapper {
+        padding: 40px 30px;
+    }
+    .admin-logo-img {
+        width: 100px;
+        height: 100px;
+    }
+    .admin-logo-text h1 {
+        font-size: 32px;
+    }
+}
+

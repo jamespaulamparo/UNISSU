@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Account Confirmation - iSysWear{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<style>
+.confirmation-container { max-width: 600px; margin: 50px auto; padding: 40px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+.warning { background: #fee; border: 2px solid #f66; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+.warning h3 { color: #c33; margin-top: 0; }
+.btn-danger { background: #dc3545; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+.btn-secondary { background: #6c757d; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; text-decoration: none; display: inline-block; margin-right: 10px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+    <h1>Delete Account Confirmation</h1>
+    
+    <div class="warning">
+        <h3>⚠️ Permanent Action</h3>
+        <p><strong>This action cannot be undone!</strong> Deleting your account will:</p>
+        <ul>
+            <li>Remove all your personal information permanently</li>
+            <li>Delete your order history</li>
+            <li>Cancel any active orders</li>
+            <li>Deactivate your login access</li>
+        </ul>
+        <p>Are you absolutely sure?</p>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <p>Type <strong>DELETE MY ACCOUNT</strong> to confirm:</p>
+        <input type="text" name="confirm_text" style="width: 300px; padding: 10px; margin-bottom: 20px; border: 2px solid #ddd; border-radius: 4px;" placeholder="DELETE MY ACCOUNT" required>
+        <div>
+            <button type="submit" class="btn-danger" onclick="return confirm('This will permanently delete your account. Continue?')">Delete My Account</button>
+            <a href="{% url 'profile' %}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

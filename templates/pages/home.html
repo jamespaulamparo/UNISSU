@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}UNISSU — Campus Gear Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Edge-to-Edge Hero Section -->
+<section class="hero-edge">
+    <div class="hero-content">
+        <h1>UNISSU PORTAL</h1>
+        <p>Your streamlined campus uniform and gear system.</p>
+        <div class="hero-actions">
+            <a href="{% url 'uniforms' %}" class="btn-primary">Explore Catalog</a>
+            {% if not user.is_authenticated %}
+                <a href="{% url 'login' %}" class="btn-outline" style="background: white;">Access Student Portal</a>
+            {% endif %}
+        </div>
+        
+        <div class="feature-pills">
+            <span><i class="fas fa-clock"></i> Quick Pickups</span>
+            <span><i class="fas fa-shirt"></i> Guaranteed Fit</span>
+            <span><i class="fas fa-id-badge"></i> Student Badge Required</span>
+        </div>
+    </div>
+</section>
+
+<!-- Main Container for Layout -->
+<div class="container-main">
+    
+    <!-- Browse Campus Essentials (Categories) -->
+    <div class="section-title">
+        <h2>Browse Campus Essentials</h2>
+    </div>
+    
+    <div class="category-grid">
+        <a href="{% url 'uniforms' %}?category=lanyards" class="category-card">
+            <div class="cat-icon-box bg-pink">
+                <img src="{% static 'images/newlace.jpg' %}" alt="Institutional Lanyards" style="width: 70%; height: 70%; object-fit: contain;">
+            </div>
+            <span>Institutional Lanyards</span>
+        </a>
+        
+        <a href="{% url 'uniforms' %}?category=department" class="category-card">
+            <div class="cat-icon-box bg-green">
+                <img src="{% static 'images/thu.jpg' %}" alt="CIS Department Polos" style="width: 85%; height: 85%; object-fit: contain;">
+            </div>
+            <span>CIS Department Polos</span>
+        </a>
+        
+        <a href="{% url 'uniforms' %}?category=uniforms" class="category-card">
+            <div class="cat-icon-box bg-pink">
+                <img src="{% static 'images/tdmale.jpg' %}" alt="Campus Uniforms" style="width: 85%; height: 85%; object-fit: contain;">
+            </div>
+            <span>Campus Uniforms</span>
+        </a>
+        
+        <a href="{% url 'uniforms' %}?category=bottoms" class="category-card">
+            <div class="cat-icon-box bg-green">
+                <img src="{% static 'images/slacksM.jpg' %}" alt="Slacks & Pants" style="width: 85%; height: 85%; object-fit: contain;">
+            </div>
+            <span>Slacks & Pants</span>
+        </a>
+    </div>
+
+    <!-- Essential Catalog (Featured Products) -->
+    <div class="section-title">
+        <h2>Essential Catalog</h2>
+    </div>
+
+    <div class="product-grid">
+        {% if featured_uniforms %}
+            {% for uniform in featured_uniforms %}
+                {% include 'components/product_card.html' with uniform=uniform %}
+            {% endfor %}
+        {% else %}
+            <!-- Real Product Fallbacks (Displays if Database is empty) -->
+            <div class="prod-card">
+                <div class="prod-img bg-pink">
+                    <img src="{% static 'images/oldLace.jpg' %}" alt="Classic Lanyard" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+                </div>
+                <div class="prod-info">
+                    <h3>Classic Campus Lanyard</h3>
+                    <p>₱55.00</p>
+                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
+                </div>
+            </div>
+            
+            <div class="prod-card">
+                <div class="prod-img bg-green">
+                    <img src="{% static 'images/wed.jpg' %}" alt="Wednesday Polo" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+                </div>
+                <div class="prod-info">
+                    <h3>CIS Wednesday Polo</h3>
+                    <p>₱450.00</p>
+                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
+                </div>
+            </div>
+
+            <div class="prod-card">
+                <div class="prod-img bg-pink">
+                    <img src="{% static 'images/slacksF.jpg' %}" alt="Female Slacks" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+                </div>
+                <div class="prod-info">
+                    <h3>Uniform Slacks (Female)</h3>
+                    <p>₱450.00</p>
+                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
+                </div>
+            </div>
+
+            <div class="prod-card">
+                <div class="prod-img bg-green">
+                    <img src="{% static 'images/mdfem.jpg' %}" alt="Campus Uniform" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+                </div>
+                <div class="prod-info">
+                    <h3>Campus Uniform (Female)</h3>
+                    <p>₱650.00</p>
+                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+</div>
+{% endblock %}

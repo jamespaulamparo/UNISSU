@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.id }} Details - iSysWear{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/orderDetails.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="order-detail-container">
+    <div class="order-detail-header">
+        <h1>Order #{{ order.id }}</h1>
+        <span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span>
+    </div>
+
+    <div class="detail-grid">
+        <!-- Customer & Summary -->
+        <div class="section full-width">
+            <h2>Order Summary</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Customer</label>
+                    <p>{{ order.customer_name }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Email</label>
+                    <p>{{ order.email }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Date</label>
+                    <p>{{ order.order_date|date:"M d, Y H:i" }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Status</label>
+                    <p><span class="status status-{{ order.status|lower }}">{{ order.get_status_display }}</span></p>
+                </div>
+                <div class="info-item">
+                    <label>Total</label>
+                    <p class="amount">₱{{ order.total_amount|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="section">
+            <h2>Shipping Address</h2>
+            <p>{{ order.address }}</p>
+            {% if order.phone %}<p><strong>Phone:</strong> {{ order.phone }}</p>{% endif %}
+        </div>
+
+        <!-- Items Table -->
+        <div class="section full-width">
+            <h2>Order Items ({{ order.items.all|length }})</h2>
+            {% if order.items.exists %}
+            <div class="items-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product_name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₱{{ item.price|floatformat:2 }}</td>
+                            <td>₱{{ item.get_total_price|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No items in this order.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'orders:order_history' %}" class="btn btn-secondary">← Back to Orders</a>
+        <a href="{% url 'orders:order_receipt' order.id %}" class="btn btn-primary" target="_blank">Print Receipt</a>
+    </div>
+</div>
+{% endblock %}

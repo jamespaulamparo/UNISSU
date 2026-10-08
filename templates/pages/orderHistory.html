@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order History - iSysWear{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/orderHistory.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="order-history-container">
+    <h2>Your Order History</h2>
+    
+    {% if orders %}
+    <div class="orders-table-container">
+        <table class="order-history-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Items</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr data-order-id="#{{ order.id }}">
+                    <td data-label="Order ID">#{{ order.id }}</td>
+                    <td data-label="Date">{{ order.order_date|date:"M d, Y" }}</td>
+                    <td data-label="Status">
+                        <span class="status status-{{ order.status|lower }}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+                    <td data-label="Total">
+                        <strong>₱{{ order.total_amount|floatformat:2 }}</strong>
+                    </td>
+                    <td data-label="Items">{{ order.items.all|length }}</td>
+                    <td data-label="Actions">
+        <a href="{% url 'orders:order_details' order.id %}" 
+                           class="btn-sm btn-primary" title="View Details">
+                            Details
+                        </a>
+                        <a href="{% url 'orders:order_receipt' order.id %}" 
+                           class="btn-sm btn-secondary" target="_blank" title="Print Receipt">
+                            Receipt
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-orders">
+        <i class="fas fa-inbox" style="font-size: 4rem; color: var(--text-light); margin-bottom: 1rem;"></i>
+        <p>No orders found.</p>
+        <p>Start shopping to place your first order!</p>
+        <a href="{% url 'uniforms' %}" class="btn-primary">Browse Uniforms</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

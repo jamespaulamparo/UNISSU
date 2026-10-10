@@ -11,7 +11,7 @@
 <div class="catalog-page-container">
     <div class="catalog-header">
         <h1>Campus Gear Catalog</h1>
-        <p>Browse official uniforms, department polos, and campus essentials.</p>
+        <p>Browse campus uniforms, department uniforms, organization uniforms, and campus essentials.</p>
     </div>
 
     <div class="catalog-layout">
@@ -41,7 +41,14 @@
                     <li>
                         <a href="{% url 'uniforms' %}?category=department"
                            class="filter-link {% if selected_category == 'department' %}active{% endif %}">
-                            Department Polos
+                            Department Uniforms
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'uniforms' %}?category=organization"
+                           class="filter-link {% if selected_category == 'organization' %}active{% endif %}">
+                            Organization Uniforms
                         </a>
                     </li>
 

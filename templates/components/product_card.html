@@ -1,11 +1,15 @@
 {% load static %}
+
 <div class="prod-card">
-    <!-- The cycle tag alternates pastel backgrounds dynamically -->
-    <div class="prod-img" style="position: relative; background: transparent;">
+    <div class="prod-img">
         {% if uniform.image %}
-            <img src="{{ uniform.image.url }}" alt="{{ uniform.name }}" class="card-fitted-img">
+            <img src="{{ uniform.image.url }}"
+                 alt="{{ uniform.name }}"
+                 class="card-fitted-img">
         {% elif uniform.image_url %}
-            <img src="{{ uniform.image_url }}" alt="{{ uniform.name }}" class="card-fitted-img">
+            <img src="{{ uniform.image_url }}"
+                 alt="{{ uniform.name }}"
+                 class="card-fitted-img">
         {% else %}
             {% if uniform.id == 1 %}
                 <img src="{% static 'images/mdfem.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
@@ -13,7 +17,7 @@
                 <img src="{% static 'images/mdmale.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
             {% elif uniform.id == 3 %}
                 <img src="{% static 'images/tdfem.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
-            {% elif uniform.id == 4 %}
+            {% elif uniform.id == 4 %}f
                 <img src="{% static 'images/tdmale.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
             {% elif uniform.id == 5 %}
                 <img src="{% static 'images/slacksF.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
@@ -33,42 +37,31 @@
                 {% endif %}
             {% endif %}
         {% endif %}
-        
+
         {% if uniform.stock == 0 %}
-            <div style="position: absolute; top: 12px; right: 12px; background: rgba(15, 23, 42, 0.85); color: white; padding: 4px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;">OUT OF STOCK</div>
+            <span class="stock-badge">OUT OF STOCK</span>
         {% endif %}
     </div>
-    
+
     <div class="prod-info">
-        <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
-            {{ size_label|default:uniform.get_size_display }} • {{ uniform.get_gender_display|default:uniform.gender }}
+        <div class="product-meta">
+            {{ size_label|default:uniform.get_size_display }} ·
+            {{ uniform.get_gender_display|default:uniform.gender }}
         </div>
-        
-        <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--slate-900); margin-bottom: 0.25rem; line-height: 1.3;">
-            {{ uniform.name }}
-        </h3>
-        
-        <p style="font-size: 1.1rem; font-weight: 800; color: var(--slate-900); margin-bottom: 1.25rem;">
-            ₱{{ uniform.price|floatformat:2 }}
-        </p>
-        
+
+        <h3>{{ uniform.name }}</h3>
+
+        <p class="product-price">₱{{ uniform.price|floatformat:2 }}</p>
+
         {% if uniform.stock > 0 %}
-            <a href="{% url 'uniform_detail' pk=uniform.id %}" class="btn-primary btn-full">View & Order</a>
+            <a href="{% url 'uniform_detail' pk=uniform.id %}"
+               class="btn-primary btn-full">
+                View &amp; Order
+            </a>
         {% else %}
-            <button class="btn-outline btn-full" disabled style="opacity: 0.5; cursor: not-allowed; background: transparent;">Out of Stock</button>
+            <button class="btn-outline btn-full" disabled>
+                Out of Stock
+            </button>
         {% endif %}
     </div>
 </div>
-
-<style>
-    .card-fitted-img {
-        max-width: 85%;
-        max-height: 85%;
-        object-fit: contain;
-        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08));
-        transition: transform 0.2s ease;
-    }
-    .prod-card:hover .card-fitted-img {
-        transform: translateY(-4px) scale(1.02);
-    }
-</style>

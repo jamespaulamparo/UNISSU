@@ -1,128 +1,216 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}UNISSU — Campus Gear Portal{% endblock %}
+{% block title %}UNISSU — Your Campus Essentials{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Edge-to-Edge Hero Section -->
-<section class="hero-edge">
-    <div class="hero-content">
-        <h1>UNISSU PORTAL</h1>
-        <p>Your streamlined campus uniform and gear system.</p>
-        <div class="hero-actions">
-            <a href="{% url 'uniforms' %}" class="btn-primary">Explore Catalog</a>
-            {% if not user.is_authenticated %}
-                <a href="{% url 'login' %}" class="btn-outline" style="background: white;">Access Student Portal</a>
+<div class="home-page">
+
+    <!-- Hero -->
+    <section class="hero-edge">
+        <div class="hero-inner">
+            <div class="hero-content">
+                <span class="hero-eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    YOUR CAMPUS, YOUR GEAR
+                </span>
+
+                <h1>
+                    Ready for<br>
+                    <span>campus life?</span>
+                </h1>
+
+                <p class="hero-description">
+                    Find your official campus uniforms, department wear,
+                    slacks, and everyday essentials—all in one place.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{% url 'uniforms' %}" class="btn-primary hero-primary">
+                        Explore the Catalog <span aria-hidden="true">→</span>
+                    </a>
+
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}" class="hero-secondary">
+                        Student Login
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="hero-benefits">
+                    <span><i class="fas fa-shirt"></i> Official campus wear</span>
+                    <span><i class="fas fa-id-badge"></i> Everyday essentials</span>
+                </div>
+            </div>
+
+            <div class="hero-visual" aria-label="A preview of campus uniforms and essentials">
+                <div class="hero-blob"></div>
+
+                <div class="hero-image hero-image-main">
+                    <img src="{% static 'images/mdfem.jpg' %}"
+                         alt="Campus uniform">
+                </div>
+
+                <div class="hero-image hero-image-small">
+                    <img src="{% static 'images/newlace.jpg' %}"
+                         alt="Institutional lanyard">
+                </div>
+
+                <div class="hero-image hero-image-bottom">
+                    <img src="{% static 'images/slacksM.jpg' %}"
+                         alt="Uniform slacks">
+                </div>
+
+                <div class="hero-note">
+                    <span class="hero-note-icon"><i class="fas fa-check"></i></span>
+                    <span>
+                        <strong>Campus essentials</strong>
+                        <small>All in one place</small>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container-main">
+
+        <!-- Categories -->
+        <section class="home-section categories-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">FIND YOUR FIT</span>
+                    <h2>What are you looking for?</h2>
+                    <p>Jump straight to the essentials you need.</p>
+                </div>
+
+                <a href="{% url 'uniforms' %}" class="text-link">
+                    View everything <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+            <div class="category-grid">
+
+                <a href="{% url 'uniforms' %}?category=uniforms"
+                   class="category-card category-pink">
+                    <div class="cat-icon-box">
+                        <img src="{% static 'images/tdmale.jpg' %}"
+                             alt="Campus uniform">
+                    </div>
+                    <div class="category-card-text">
+                        <strong>Campus Uniforms</strong>
+                        <span>Official daily wear</span>
+                    </div>
+                    <span class="category-arrow" aria-hidden="true">↗</span>
+                </a>
+
+                <a href="{% url 'uniforms' %}?category=department"
+                   class="category-card category-green">
+                    <div class="cat-icon-box">
+                        <img src="{% static 'images/wed.jpg' %}"
+                             alt="CIS department uniform">
+                    </div>
+                    <div class="category-card-text">
+                        <strong>Department Wear</strong>
+                        <span>CIS department uniforms</span>
+                    </div>
+                    <span class="category-arrow" aria-hidden="true">↗</span>
+                </a>
+
+                <a href="{% url 'uniforms' %}?category=organization"
+                   class="category-card category-yellow">
+                    <div class="cat-icon-box">
+                        <img src="{% static 'images/thu.jpg' %}"
+                             alt="CIS organization uniform">
+                    </div>
+                    <div class="category-card-text">
+                        <strong>Organization Wear</strong>
+                        <span>Represent your group</span>
+                    </div>
+                    <span class="category-arrow" aria-hidden="true">↗</span>
+                </a>
+
+                <a href="{% url 'uniforms' %}?category=bottoms"
+                   class="category-card category-blue">
+                    <div class="cat-icon-box">
+                        <img src="{% static 'images/slacksM.jpg' %}"
+                             alt="Uniform slacks">
+                    </div>
+                    <div class="category-card-text">
+                        <strong>Slacks &amp; Pants</strong>
+                        <span>Complete your uniform</span>
+                    </div>
+                    <span class="category-arrow" aria-hidden="true">↗</span>
+                </a>
+
+                <a href="{% url 'uniforms' %}?category=lanyards"
+                   class="category-card category-lilac">
+                    <div class="cat-icon-box">
+                        <img src="{% static 'images/newlace.jpg' %}"
+                             alt="Institutional lanyard">
+                    </div>
+                    <div class="category-card-text">
+                        <strong>Lanyards &amp; IDs</strong>
+                        <span>Small essentials, every day</span>
+                    </div>
+                    <span class="category-arrow" aria-hidden="true">↗</span>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Featured products -->
+        <section class="home-section featured-section">
+            <div class="section-heading">
+                <div>
+                    <span class="section-kicker">THE CAMPUS EDIT</span>
+                    <h2>Campus essentials</h2>
+                    <p>Browse the latest items available in the catalog.</p>
+                </div>
+
+                <a href="{% url 'uniforms' %}" class="text-link">
+                    Explore catalog <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+            {% if featured_uniforms %}
+                <div class="product-grid">
+                    {% for uniform in featured_uniforms %}
+                        {% include 'components/product_card.html' with uniform=uniform %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="home-empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>New essentials are on the way.</h3>
+                    <p>There are no products to display right now. Check the full catalog again soon.</p>
+                    <a href="{% url 'uniforms' %}" class="btn-primary">
+                        Browse Catalog
+                    </a>
+                </div>
             {% endif %}
-        </div>
-        
-        <div class="feature-pills">
-            <span><i class="fas fa-clock"></i> Quick Pickups</span>
-            <span><i class="fas fa-shirt"></i> Look Professional</span>
-            <span><i class="fas fa-id-badge"></i> Trusted by Students</span>
-        </div>
-    </div>
-</section>
+        </section>
 
-<!-- Main Container for Layout -->
-<div class="container-main">
-    
-    <!-- Browse Campus Essentials (Categories) -->
-    <div class="section-title">
-        <h2>Browse Campus Essentials</h2>
-    </div>
-    
-    <div class="category-grid">
-        <a href="{% url 'uniforms' %}?category=lanyards" class="category-card">
-            <div class="cat-icon-box bg-pink">
-                <img src="{% static 'images/newlace.jpg' %}" alt="Institutional Lanyards" style="width: 70%; height: 70%; object-fit: contain;">
-            </div>
-            <span>Institutional Lanyards</span>
-        </a>
-        
-        <a href="{% url 'uniforms' %}?category=department" class="category-card">
-            <div class="cat-icon-box bg-green">
-                <img src="{% static 'images/thu.jpg' %}" alt="CIS Department Polos" style="width: 85%; height: 85%; object-fit: contain;">
-            </div>
-            <span>CIS Department Polos</span>
-        </a>
-        
-        <a href="{% url 'uniforms' %}?category=uniforms" class="category-card">
-            <div class="cat-icon-box bg-pink">
-                <img src="{% static 'images/tdmale.jpg' %}" alt="Campus Uniforms" style="width: 85%; height: 85%; object-fit: contain;">
-            </div>
-            <span>Campus Uniforms</span>
-        </a>
-        
-        <a href="{% url 'uniforms' %}?category=bottoms" class="category-card">
-            <div class="cat-icon-box bg-green">
-                <img src="{% static 'images/slacksM.jpg' %}" alt="Slacks & Pants" style="width: 85%; height: 85%; object-fit: contain;">
-            </div>
-            <span>Slacks & Pants</span>
-        </a>
-    </div>
+        <!-- Bottom call to action -->
+        <section class="home-cta">
+            <div class="cta-decoration cta-decoration-one"></div>
+            <div class="cta-decoration cta-decoration-two"></div>
 
-    <!-- Essential Catalog (Featured Products) -->
-    <div class="section-title">
-        <h2>Essential Catalog</h2>
-    </div>
+            <div class="cta-content">
+                <span class="section-kicker">YOUR NEXT CAMPUS ESSENTIAL</span>
+                <h2>Everything you need for campus life.</h2>
+                <p>Find your uniform, complete your look, and get ready for the school day.</p>
+                <a href="{% url 'uniforms' %}" class="cta-button">
+                    Browse All Products <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </section>
 
-    <div class="product-grid">
-        {% if featured_uniforms %}
-            {% for uniform in featured_uniforms %}
-                {% include 'components/product_card.html' with uniform=uniform %}
-            {% endfor %}
-        {% else %}
-            <!-- Real Product Fallbacks (Displays if Database is empty) -->
-            <div class="prod-card">
-                <div class="prod-img bg-pink">
-                    <img src="{% static 'images/oldLace.jpg' %}" alt="Classic Lanyard" style="max-width: 80%; max-height: 80%; object-fit: contain;">
-                </div>
-                <div class="prod-info">
-                    <h3>Classic Campus Lanyard</h3>
-                    <p>₱55.00</p>
-                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
-                </div>
-            </div>
-            
-            <div class="prod-card">
-                <div class="prod-img bg-green">
-                    <img src="{% static 'images/wed.jpg' %}" alt="Wednesday Polo" style="max-width: 80%; max-height: 80%; object-fit: contain;">
-                </div>
-                <div class="prod-info">
-                    <h3>CIS Wednesday Polo</h3>
-                    <p>₱450.00</p>
-                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
-                </div>
-            </div>
-
-            <div class="prod-card">
-                <div class="prod-img bg-pink">
-                    <img src="{% static 'images/slacksF.jpg' %}" alt="Female Slacks" style="max-width: 80%; max-height: 80%; object-fit: contain;">
-                </div>
-                <div class="prod-info">
-                    <h3>Uniform Slacks (Female)</h3>
-                    <p>₱450.00</p>
-                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
-                </div>
-            </div>
-
-            <div class="prod-card">
-                <div class="prod-img bg-green">
-                    <img src="{% static 'images/mdfem.jpg' %}" alt="Campus Uniform" style="max-width: 80%; max-height: 80%; object-fit: contain;">
-                </div>
-                <div class="prod-info">
-                    <h3>Campus Uniform (Female)</h3>
-                    <p>₱650.00</p>
-                    <a href="{% url 'uniforms' %}" class="btn-primary btn-full">Select Size</a>
-                </div>
-            </div>
-        {% endif %}
-    </div>
-    
+    </main>
 </div>
 {% endblock %}

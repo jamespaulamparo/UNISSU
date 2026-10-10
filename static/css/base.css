@@ -200,7 +200,7 @@ a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
     width: 28px;
     height: 28px;
     background: var(--slate-800);
-    color: var(--white);
+    color: var(--bg-surface);
     border-radius: var(--radius-pill);
     display: flex;
     align-items: center;

@@ -5,122 +5,316 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNISSU — Access Portal</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/loginAndregister.css' %}">
 </head>
+
 <body>
+<div class="split-layout" id="auth-layout">
 
-<div class="split-layout">
-    <!-- Left: Solid Edge-to-Edge Brand Panel -->
-    <div class="split-left">
+    <!-- Left: Branding Panel -->
+    <aside class="split-left">
         <div class="left-content">
-            <a href="{% url 'home' %}" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
-            <div class="brand-icon-large">is</div>
-            <h1>UNISSU Portal</h1>
-            <p>Your streamlined campus uniform and gear system. Sign in to reserve your items and manage your student profile.</p>
-        </div>
-    </div>
 
-    <!-- Right: Spacious Authentication Forms -->
-    <div class="split-right">
+            <nav class="brand-navigation">
+                <a href="{% url 'home' %}" class="back-home">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Home</span>
+                </a>
+            </nav>
+
+            <div class="brand-copy" id="brand-copy">
+                <span class="eyebrow">YOUR CAMPUS, SIMPLIFIED</span>
+                <h1>Welcome<br>back.</h1>
+                <p>
+                    Your campus uniform and gear, all in one place.
+                    Log in to reserve your items and manage your student profile.
+                </p>
+            </div>
+
+            <div class="brand-decoration" aria-hidden="true">
+                <span class="decoration-circle circle-one"></span>
+                <span class="decoration-circle circle-two"></span>
+                <span class="decoration-circle circle-three"></span>
+            </div>
+
+            <div class="brand-footer">
+                <span><i class="fas fa-shield-alt"></i> Student access portal</span>
+                <span class="footer-dot"></span>
+                <span>Made for campus life</span>
+            </div>
+
+        </div>
+    </aside>
+
+    <!-- Right: Authentication Forms -->
+    <main class="split-right">
         <div class="form-container">
-            
+
             {% if messages %}
                 <div class="auth-alerts">
                     {% for message in messages %}
-                        <div class="alert-box">{{ message }}</div>
+                        <div class="alert-box">
+                            <i class="fas fa-info-circle"></i>
+                            <span>{{ message }}</span>
+                        </div>
                     {% endfor %}
                 </div>
             {% endif %}
 
             <div class="form-header">
-                <h2>Access Your Account</h2>
-                <p>Sign in or create a new student profile.</p>
+                <span class="form-eyebrow" id="form-eyebrow">NICE TO SEE YOU AGAIN</span>
+                <h2 id="form-title">Access your account</h2>
+                <p id="form-subtitle">Enter your details to continue to your student portal.</p>
             </div>
 
-            <!-- iOS Style Tab Switcher -->
-            <div class="tab-controls">
-                <button class="tab-btn active" onclick="showTab('login')">Log In</button>
-                <button class="tab-btn" onclick="showTab('register')">Register</button>
+            <!-- Tab Switcher -->
+            <div class="tab-controls" role="tablist" aria-label="Account access">
+                <button
+                    type="button"
+                    class="tab-btn active"
+                    id="login-button"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="login-tab"
+                    onclick="showTab('login', this)"
+                >
+                    <i class="fas fa-sign-in-alt"></i>
+                    Log In
+                </button>
+
+                <button
+                    type="button"
+                    class="tab-btn"
+                    id="register-button"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="register-tab"
+                    onclick="showTab('register', this)"
+                >
+                    <i class="fas fa-user-plus"></i>
+                    Register
+                </button>
             </div>
 
             <!-- Login Form -->
-            <div id="login-tab" class="tab-content active">
+            <section
+                id="login-tab"
+                class="tab-content active"
+                role="tabpanel"
+                aria-labelledby="login-button"
+            >
                 <form method="POST" action="{% url 'login' %}">
                     {% csrf_token %}
+
                     <div class="input-group">
-                        <label>Student Number / Username</label>
+                        <label for="{{ login_form.username.id_for_label }}">
+                            Student Number / Username
+                        </label>
                         {{ login_form.username }}
+                        {% if login_form.username.errors %}
+                            <div class="field-error">{{ login_form.username.errors }}</div>
+                        {% endif %}
                     </div>
+
                     <div class="input-group">
-                        <label>Password</label>
+                        <label for="{{ login_form.password.id_for_label }}">
+                            Password
+                        </label>
                         <div class="password-wrapper">
                             {{ login_form.password }}
                         </div>
+                        {% if login_form.password.errors %}
+                            <div class="field-error">{{ login_form.password.errors }}</div>
+                        {% endif %}
                     </div>
-                    <button type="submit" class="btn-solid-pink">Sign In <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></button>
-                </form>
-            </div>
 
-            <!-- Register Form -->
-            <div id="register-tab" class="tab-content">
+                    {% if login_form.non_field_errors %}
+                        <div class="field-error">{{ login_form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <button type="submit" class="btn-auth">
+                        <span>Log In</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+
+                <p class="form-bottom-note">
+                    New to UNISSU?
+                    <button type="button" class="text-link" onclick="showTab('register', document.getElementById('register-button'))">
+                        Create an account
+                    </button>
+                </p>
+            </section>
+
+            <!-- Registration Form -->
+            <section
+                id="register-tab"
+                class="tab-content"
+                role="tabpanel"
+                aria-labelledby="register-button"
+                hidden
+            >
                 <form method="POST" action="{% url 'register' %}">
                     {% csrf_token %}
+
                     <div class="input-row">
                         <div class="input-group">
-                            <label>Full Name</label>
+                            <label for="{{ register_form.full_name.id_for_label }}">Full Name</label>
                             {{ register_form.full_name }}
+                            {% if register_form.full_name.errors %}
+                                <div class="field-error">{{ register_form.full_name.errors }}</div>
+                            {% endif %}
                         </div>
+
                         <div class="input-group">
-                            <label>Student ID</label>
+                            <label for="{{ register_form.student_id.id_for_label }}">Student ID</label>
                             {{ register_form.student_id }}
+                            {% if register_form.student_id.errors %}
+                                <div class="field-error">{{ register_form.student_id.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
+
                     <div class="input-row">
                         <div class="input-group">
-                            <label>Username</label>
+                            <label for="{{ register_form.username.id_for_label }}">Username</label>
                             {{ register_form.username }}
+                            {% if register_form.username.errors %}
+                                <div class="field-error">{{ register_form.username.errors }}</div>
+                            {% endif %}
                         </div>
+
                         <div class="input-group">
-                            <label>Course & Year</label>
+                            <label for="{{ register_form.course_year.id_for_label }}">Course &amp; Year</label>
                             {{ register_form.course_year }}
+                            {% if register_form.course_year.errors %}
+                                <div class="field-error">{{ register_form.course_year.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
+
                     <div class="input-group">
-                        <label>Email Address</label>
+                        <label for="{{ register_form.email.id_for_label }}">Email Address</label>
                         {{ register_form.email }}
+                        {% if register_form.email.errors %}
+                            <div class="field-error">{{ register_form.email.errors }}</div>
+                        {% endif %}
                     </div>
+
                     <div class="input-row">
                         <div class="input-group">
-                            <label>Password</label>
+                            <label for="{{ register_form.password1.id_for_label }}">Password</label>
                             {{ register_form.password1 }}
+                            {% if register_form.password1.errors %}
+                                <div class="field-error">{{ register_form.password1.errors }}</div>
+                            {% endif %}
                         </div>
+
                         <div class="input-group">
-                            <label>Confirm Password</label>
+                            <label for="{{ register_form.password2.id_for_label }}">Confirm Password</label>
                             {{ register_form.password2 }}
+                            {% if register_form.password2.errors %}
+                                <div class="field-error">{{ register_form.password2.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
-                    <button type="submit" class="btn-solid-pink">Complete Registration</button>
+
+                    {% if register_form.non_field_errors %}
+                        <div class="field-error">{{ register_form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <button type="submit" class="btn-auth">
+                        <span>Create Account</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </form>
-            </div>
-            
+
+                <p class="form-bottom-note">
+                    Already have an account?
+                    <button type="button" class="text-link" onclick="showTab('login', document.getElementById('login-button'))">
+                        Log in instead
+                    </button>
+                </p>
+            </section>
+
         </div>
-    </div>
+    </main>
+
 </div>
 
 <script>
-    function showTab(tabName) {
-        document.querySelectorAll('.tab-content, .tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabName + '-tab').classList.add('active');
-        event.target.classList.add('active');
+    const authLayout = document.getElementById('auth-layout');
+
+    const brandCopy = document.getElementById('brand-copy');
+    const formEyebrow = document.getElementById('form-eyebrow');
+    const formTitle = document.getElementById('form-title');
+    const formSubtitle = document.getElementById('form-subtitle');
+
+    const tabContent = document.querySelectorAll('.tab-content');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+
+    function showTab(tabName, button) {
+        const isRegister = tabName === 'register';
+
+        // Switch the active form.
+        tabContent.forEach(tab => {
+            const isActive = tab.id === `${tabName}-tab`;
+            tab.classList.toggle('active', isActive);
+            tab.hidden = !isActive;
+        });
+
+        // Update the tab buttons and accessibility states.
+        tabButtons.forEach(tabButton => {
+            const isActive = tabButton === button;
+            tabButton.classList.toggle('active', isActive);
+            tabButton.setAttribute('aria-selected', String(isActive));
+        });
+
+        // Trigger the panel and accent-color transition.
+        authLayout.classList.toggle('register-mode', isRegister);
+
+        // Update the text to match the selected form.
+        if (isRegister) {
+            brandCopy.innerHTML = `
+                <span class="eyebrow">LET'S GET YOU STARTED</span>
+                <h1>Your campus.<br>Your style.</h1>
+                <p>
+                    Create your student profile and make getting your campus
+                    uniform little easier.
+                </p>
+            `;
+
+            formEyebrow.textContent = 'JOIN THE UNISSU COMMUNITY';
+            formTitle.textContent = 'Create your account';
+            formSubtitle.textContent = 'Fill in your student details to get started.';
+        } else {
+            brandCopy.innerHTML = `
+                <span class="eyebrow">YOUR CAMPUS, SIMPLIFIED</span>
+                <h1>Welcome<br>back.</h1>
+                <p>
+                    Your campus uniform and accessories, all in one place.
+                    Log in to reserve your items and manage your student profile.
+                </p>
+            `;
+
+            formEyebrow.textContent = 'NICE TO SEE YOU AGAIN';
+            formTitle.textContent = 'Access your account';
+            formSubtitle.textContent = 'Enter your details to continue to your student portal.';
+        }
     }
-    
-    document.querySelectorAll('input').forEach(input => {
-        if(input.type !== 'hidden' && input.type !== 'checkbox') {
+
+    // Style Django-generated form inputs.
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+        if (input.type !== 'hidden' && input.type !== 'checkbox' && input.type !== 'submit') {
             input.classList.add('form-input');
         }
     });
+
+    // Keep the correct panel color if the browser restores the page.
+    showTab('login', document.getElementById('login-button'));
 </script>
 </body>
 </html>

@@ -7,6 +7,14 @@ class Uniform(models.Model):
         ('Female', 'Female'),
         ('Unisex', 'Unisex'),
     ]
+    
+    CATEGORY_CHOICES = [
+    ('uniforms', 'Campus Uniforms'),
+    ('department', 'Department Uniforms'),
+    ('organization', 'Organization Uniforms'),
+    ('bottoms', 'Slacks & Pants'),
+    ('lanyards', 'Lanyards & IDs'),
+    ]
 
 
     name = models.CharField(max_length=255)
@@ -14,6 +22,12 @@ class Uniform(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     size = models.TextField(default='')
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='Unisex')
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        blank=True,
+        default='',
+    )
     color = models.CharField(max_length=100, blank=True)
     stock = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='uniforms/', blank=True, null=True)

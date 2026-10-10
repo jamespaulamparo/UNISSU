@@ -13,59 +13,142 @@
         <h1>Campus Gear Catalog</h1>
         <p>Browse official uniforms, department polos, and campus essentials.</p>
     </div>
-    
+
     <div class="catalog-layout">
+
         <!-- Sidebar / Filters -->
         <aside class="catalog-sidebar">
+
+            <!-- Category Filters -->
             <div class="filter-section">
                 <h3>Categories</h3>
+
                 <ul class="filter-list">
-                    <li><a href="{% url 'uniforms' %}" class="filter-link active">All Items</a></li>
-                    <li><a href="{% url 'uniforms' %}?category=uniforms" class="filter-link">Campus Uniforms</a></li>
-                    <li><a href="{% url 'uniforms' %}?category=department" class="filter-link">Department Polos</a></li>
-                    <li><a href="{% url 'uniforms' %}?category=bottoms" class="filter-link">Slacks & Pants</a></li>
-                    <li><a href="{% url 'uniforms' %}?category=lanyards" class="filter-link">Lanyards & IDs</a></li>
+                    <li>
+                        <a href="{% url 'uniforms' %}"
+                           class="filter-link {% if not selected_category %}active{% endif %}">
+                            All Items
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'uniforms' %}?category=uniforms"
+                           class="filter-link {% if selected_category == 'uniforms' %}active{% endif %}">
+                            Campus Uniforms
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'uniforms' %}?category=department"
+                           class="filter-link {% if selected_category == 'department' %}active{% endif %}">
+                            Department Polos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'uniforms' %}?category=bottoms"
+                           class="filter-link {% if selected_category == 'bottoms' %}active{% endif %}">
+                            Slacks &amp; Pants
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'uniforms' %}?category=lanyards"
+                           class="filter-link {% if selected_category == 'lanyards' %}active{% endif %}">
+                            Lanyards &amp; IDs
+                        </a>
+                    </li>
                 </ul>
             </div>
 
+            <!-- Gender Filters -->
             <div class="filter-section">
                 <h3>Gender Filter</h3>
-                <div class="filter-options">
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="gender" value="M">
-                        <span class="checkmark"></span> Male
-                    </label>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="gender" value="F">
-                        <span class="checkmark"></span> Female
-                    </label>
-                    <label class="custom-checkbox">
-                        <input type="checkbox" name="gender" value="U">
-                        <span class="checkmark"></span> Unisex
-                    </label>
-                </div>
+
+                <form method="GET" action="{% url 'uniforms' %}">
+
+                    <!-- Preserve other selected filters -->
+                    <input type="hidden" name="category"
+                           value="{{ selected_category }}">
+
+                    <input type="hidden" name="q"
+                           value="{{ search_query }}">
+
+                    <input type="hidden" name="size"
+                           value="{{ selected_size }}">
+
+                    <div class="filter-options">
+
+                        <label class="custom-checkbox">
+                            <input type="checkbox"
+                                   name="gender"
+                                   value="Male"
+                                   {% if 'Male' in selected_genders %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            Male
+                        </label>
+
+                        <label class="custom-checkbox">
+                            <input type="checkbox"
+                                   name="gender"
+                                   value="Female"
+                                   {% if 'Female' in selected_genders %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            Female
+                        </label>
+
+                        <label class="custom-checkbox">
+                            <input type="checkbox"
+                                   name="gender"
+                                   value="Unisex"
+                                   {% if 'Unisex' in selected_genders %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            Unisex
+                        </label>
+
+                    </div>
+
+                    <button type="submit" class="btn-primary-outline"
+                            style="margin-top: 16px;">
+                        Apply Filters
+                    </button>
+
+                </form>
             </div>
+
         </aside>
 
         <!-- Products Grid -->
         <main class="catalog-main">
+
             {% if uniforms %}
                 <div class="products-grid">
                     {% for uniform in uniforms %}
                         {% include 'components/product_card.html' with uniform=uniform size_label='Multiple Sizes' %}
                     {% endfor %}
                 </div>
+
             {% else %}
                 <!-- Empty Search/Filter State -->
                 <div class="empty-catalog">
                     <div class="empty-icon-circle bg-pink">
                         <i class="fas fa-search"></i>
                     </div>
+
                     <h2>No items found</h2>
-                    <p>We couldn't find any uniforms matching your current filters.</p>
-                    <a href="{% url 'uniforms' %}" class="btn-primary-outline" style="display: inline-block;">Clear Filters</a>
+
+                    <p>
+                        We couldn't find any uniforms matching your current filters.
+                    </p>
+
+                    <a href="{% url 'uniforms' %}"
+                       class="btn-primary-outline"
+                       style="display: inline-block;">
+                        Clear Filters
+                    </a>
                 </div>
             {% endif %}
+
         </main>
     </div>
 </div>

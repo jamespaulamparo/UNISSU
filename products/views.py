@@ -8,34 +8,63 @@ def home(request):
     return render(request, 'pages/home.html', {'featured_uniforms': featured})
 
 
+
 def uniforms(request):
-    """Catalog view with filter and search capability."""
+    """Catalog view with category, gender, size, and search filters."""
+    selected_category = request.GET.get('category', '').strip()
+    selected_genders = request.GET.getlist('gender')
     selected_size = request.GET.get('size', '').strip()
-    selected_gender = request.GET.get('gender', '').strip()
     search_query = request.GET.get('q', '').strip()
 
+    # Start with the complete catalog.
     qs = Uniform.objects.all()
 
+    # Search by product name.
     if search_query:
         qs = qs.filter(name__icontains=search_query)
 
-    if selected_gender:
-        qs = qs.filter(gender__iexact=selected_gender)
+    # Filter by category.
+    valid_categories = {
+        value for value, label in Uniform.CATEGORY_CHOICES
+    }
 
-    if selected_size:
-        qs = qs.filter(sizes__size=selected_size).distinct()
+    if selected_category in valid_categories:
+        qs = qs.filter(category=selected_category)
 
-    sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL', 'ONE_SIZE']
-    gender_choices = Uniform.GENDER_CHOICES
+    # Filter by one or more genders.
+    valid_genders = {
+        value for value, label in Uniform.GENDER_CHOICES
+    }
+
+    selected_genders = [
+        gender for gender in selected_genders
+        if gender in valid_genders
+    ]
+
+    if selected_genders:
+        qs = qs.filter(gender__in=selected_genders)
+
+    # Filter by available size.
+    valid_sizes = {
+        value for value, label in UniformSize.SIZE_CHOICES
+    }
+
+    if selected_size in valid_sizes:
+        qs = qs.filter(
+            sizes__size=selected_size
+        ).distinct()
 
     context = {
         'uniforms': qs,
-        'sizes': sizes,
-        'GENDER_CHOICES': gender_choices,
+        'sizes': [value for value, label in UniformSize.SIZE_CHOICES],
+        'GENDER_CHOICES': Uniform.GENDER_CHOICES,
+        'CATEGORY_CHOICES': Uniform.CATEGORY_CHOICES,
+        'selected_category': selected_category,
+        'selected_genders': selected_genders,
         'selected_size': selected_size,
-        'selected_gender': selected_gender,
         'search_query': search_query,
     }
+
     return render(request, 'pages/uniforms.html', context)
 
 

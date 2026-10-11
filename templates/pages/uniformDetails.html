@@ -39,6 +39,8 @@
                         <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% elif uniform.id == 9 %}
                         <img src="{% static 'images/newlace.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
+                    {% elif uniform.id == 10 %}
+                        <img src="{% static 'images/oldLace.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
                     {% else %}
                         {% if uniform.gender == 'Female' %}
                             <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">

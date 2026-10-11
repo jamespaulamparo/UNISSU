@@ -17,7 +17,7 @@
                 <img src="{% static 'images/mdmale.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
             {% elif uniform.id == 3 %}
                 <img src="{% static 'images/tdfem.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
-            {% elif uniform.id == 4 %}f
+            {% elif uniform.id == 4 %}
                 <img src="{% static 'images/tdmale.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
             {% elif uniform.id == 5 %}
                 <img src="{% static 'images/slacksF.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
@@ -29,6 +29,10 @@
                 <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
             {% elif uniform.id == 9 %}
                 <img src="{% static 'images/newlace.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">
+            {% elif uniform.id == 10 %}
+                <img src="{% static 'images/oldLace.jpg' %}"
+                    alt="{{ uniform.name }}"
+                    class="card-fitted-img">
             {% else %}
                 {% if uniform.gender == 'Female' or uniform.gender == 'F' %}
                     <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="card-fitted-img">

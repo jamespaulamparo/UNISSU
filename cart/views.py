@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import Http404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from products.models import Uniform
-from orders.models import Order, OrderItem  # ← this line must be correct
+from orders.models import Order, OrderItem
+from users.models import Profile
 
 def cart_view(request):
     raw = request.session.get('cart', {})
@@ -29,8 +32,11 @@ def cart_view(request):
         total += item_total
     return render(request, 'pages/cart.html', {'cart_items': items, 'cart_total': total})
 
-@login_required
 def checkout(request):
+    if not request.user.is_authenticated:
+        messages.info(request, "Please log in with your student account or register to complete your order reservation.")
+        return redirect('/login/?next=/cart/checkout/')
+
     raw = request.session.get('cart', {})
     items = []
     total = 0
@@ -38,7 +44,7 @@ def checkout(request):
         try:
             pk = int(pk_str)
             uniform = get_object_or_404(Uniform, id=pk)
-        except ValueError:
+        except (ValueError, Http404):
             continue
         if isinstance(data, dict):
             qty = data.get('quantity', 1)
@@ -55,15 +61,58 @@ def checkout(request):
         })
         total += item_total
 
+    profile = getattr(request.user, 'profile', None)
+
     if request.method == 'POST':
+        # ── "Delete" single item button ───────────────────────────
+        if 'delete_item' in request.POST:
+            item_id = request.POST.get('item_id')
+            cart = request.session.get('cart', {})
+            cart.pop(str(item_id), None)
+            request.session['cart'] = cart
+            messages.info(request, "Item removed from your cart.")
+            return redirect('checkout')
+
+        # Payment options extraction
+        payment_method = request.POST.get('payment_method', 'cash')
+        if payment_method not in ['cash', 'online']:
+            payment_method = 'cash'
+
+        payment_reference = request.POST.get('payment_reference', '').strip()
+        payment_receipt = request.FILES.get('payment_receipt')
+        contact_phone = request.POST.get('phone', '').strip() or (profile.phone_number if profile else '')
+
+        # Online payment requires proof
+        if payment_method == 'online':
+            if not payment_reference:
+                messages.error(request, "Please enter your payment reference / transaction number.")
+                return render(request, 'pages/checkout.html', {'cart_items': items, 'cart_total': total, 'profile': profile})
+            if not payment_receipt:
+                messages.error(request, "Please upload a screenshot or image of your payment receipt.")
+                return render(request, 'pages/checkout.html', {'cart_items': items, 'cart_total': total, 'profile': profile})
+
+        customer_name = profile.full_name if (profile and profile.full_name) else (request.user.get_full_name() or request.user.username)
+        student_id_val = profile.student_id if profile else ''
+        course_year_val = profile.course_year if profile else ''
+
         # ── "Order All Items" button ──────────────────────────────
         if 'place_order_all' in request.POST:
+            if not items:
+                messages.error(request, "Your cart is currently empty.")
+                return redirect('cart')
+
             order = Order.objects.create(
                 user=request.user,
-                customer_name=request.user.get_full_name() or request.user.username,
+                customer_name=customer_name,
                 email=request.user.email,
-                address='CIS Faculty Pickup',
-                phone='',
+                phone=contact_phone,
+                student_id=student_id_val,
+                course_year=course_year_val,
+                pickup_location='DMMMSU NLUC CIS Faculty Office',
+                address='Counter Pickup',
+                payment_method=payment_method,
+                payment_reference=payment_reference,
+                payment_receipt=payment_receipt,
                 total_amount=total,
                 status='pending',
             )
@@ -72,12 +121,14 @@ def checkout(request):
                     order=order,
                     product_id=item['uniform'].id,
                     product_name=item['uniform'].name,
+                    size=item['selected_size'],
                     quantity=item['quantity'],
                     price=item['uniform'].price,
                 )
             # Clear entire cart
             request.session['cart'] = {}
             request.session['last_order_id'] = order.id
+            messages.success(request, f"Order placed successfully! Order Claim Code: {order.claim_code}")
             return redirect('orders:order_confirmation')
 
         # ── "Order" single item button ────────────────────────────
@@ -89,10 +140,16 @@ def checkout(request):
             if single_item:
                 order = Order.objects.create(
                     user=request.user,
-                    customer_name=request.user.get_full_name() or request.user.username,
+                    customer_name=customer_name,
                     email=request.user.email,
-                    address='CIS Faculty Pickup',
-                    phone='',
+                    phone=contact_phone,
+                    student_id=student_id_val,
+                    course_year=course_year_val,
+                    pickup_location='DMMMSU NLUC CIS Faculty Office',
+                    address='Counter Pickup',
+                    payment_method=payment_method,
+                    payment_reference=payment_reference,
+                    payment_receipt=payment_receipt,
                     total_amount=single_item['total_price'],
                     status='pending',
                 )
@@ -100,6 +157,7 @@ def checkout(request):
                     order=order,
                     product_id=single_item['uniform'].id,
                     product_name=single_item['uniform'].name,
+                    size=single_item['selected_size'],
                     quantity=single_item['quantity'],
                     price=single_item['uniform'].price,
                 )
@@ -108,17 +166,14 @@ def checkout(request):
                 cart.pop(str(item_id), None)
                 request.session['cart'] = cart
                 request.session['last_order_id'] = order.id
-            return redirect('orders:order_confirmation')
+                messages.success(request, f"Order placed successfully! Order Claim Code: {order.claim_code}")
+                return redirect('orders:order_confirmation')
 
-        # ── "Delete" single item button ───────────────────────────
-        elif 'delete_item' in request.POST:
-            item_id = request.POST.get('item_id')
-            cart = request.session.get('cart', {})
-            cart.pop(str(item_id), None)
-            request.session['cart'] = cart
-            return redirect('checkout')
-
-    return render(request, 'pages/checkout.html', {'cart_items': items, 'cart_total': total})
+    return render(request, 'pages/checkout.html', {
+        'cart_items': items,
+        'cart_total': total,
+        'profile': profile
+    })
 
 def add_to_cart(request, pk):
     if request.method != 'POST':

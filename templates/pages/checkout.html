@@ -1,120 +1,361 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Checkout - iSysWear{% endblock %}
+{% block title %}Checkout & Order Placement — UNISSU{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+<style>
+/* Refined pastel aesthetics and layout enhancements */
+.checkout-page-header {
+    margin-bottom: 28px;
+}
+.checkout-page-title {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    letter-spacing: -0.02em;
+}
+.checkout-page-subtitle {
+    color: var(--slate-600);
+    font-size: 0.95rem;
+    margin-top: 4px;
+}
+.pickup-badge-card {
+    background: #EAF4EE;
+    border: 1px solid #C2E2D2;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+}
+.pickup-badge-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: #6B9080;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+.pickup-badge-text h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 2px;
+}
+.pickup-badge-text p {
+    font-size: 0.82rem;
+    color: #475569;
+    margin: 0;
+}
+.payment-selector-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+}
+.payment-card-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(15, 23, 42, 0.08);
+    background: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.payment-card-label:hover {
+    border-color: #F4ACB7;
+    background: #FFF9FA;
+}
+.payment-card-label.selected {
+    border-color: #6B9080;
+    background: #F7FAF8;
+}
+.payment-card-radio {
+    margin-top: 4px;
+    accent-color: #6B9080;
+    width: 18px;
+    height: 18px;
+}
+.payment-card-body h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.payment-card-body p {
+    font-size: 0.82rem;
+    color: #64748B;
+    margin: 0;
+}
+.online-instructions-panel {
+    display: none;
+    background: #F8FAFC;
+    border: 1px dashed #CBD5E1;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 14px;
+}
+.online-instructions-panel.active {
+    display: block;
+}
+.item-size-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #FFE5EC;
+    color: #C86B7A;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 4px;
+}
+/* Enhanced Order Summary Items with proper padding, margins, and smooth hover */
+.summary-order-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    background: #FFFFFF;
+    transition: all 0.2s ease;
+}
+.summary-order-item:hover {
+    background-color: #FFF2F7;
+    border-color: #F4ACB7;
+    transform: translateX(2px);
+}
+.summary-item-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    object-fit: contain;
+    flex-shrink: 0;
+    padding: 2px;
+}
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="checkout-container">
-    <div class="container">
-        <h1>Checkout</h1>
+    <div class="container" style="max-width: 1100px; margin: 0 auto;">
+        
+        <div class="checkout-page-header">
+            <h1 class="checkout-page-title">Order Checkout</h1>
+            <p class="checkout-page-subtitle">Verify student information, select pickup payment method, and submit order.</p>
+        </div>
 
-        <div class="checkout-content">
-            <div class="checkout-form-section">
-                <h2>Student Information</h2>
-                <form method="POST" class="checkout-form">
-                    {% csrf_token %}
-                    
-                    <div class="form-group">
-                        <label for="full_name">Full Name</label>
-                        <input type="text" id="full_name" value="{{ user.full_name }}" readonly class="form-control" style="background-color: #f5f5f5;">
+        {% if messages %}
+            <div style="margin-bottom: 20px;">
+                {% for message in messages %}
+                    <div style="padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 8px; {% if message.tags == 'error' %}background:#FEE2E2; color:#991B1B; border:1px solid #FCA5A5;{% else %}background:#EAF4EE; color:#2C5E43; border:1px solid #C2E2D2;{% endif %}">
+                        {{ message }}
                     </div>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-                    <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" value="{{ user.email }}" readonly class="form-control" style="background-color: #f5f5f5;">
-                    </div>
-
+        {% if not cart_items %}
+            <div style="background: #fff; padding: 48px; border-radius: 16px; text-align: center; border: 1px solid rgba(15,23,42,0.06);">
+                <i class="fas fa-shopping-bag" style="font-size: 3rem; color: #CBD5E1; margin-bottom: 16px;"></i>
+                <h3 style="color: #1E293B; margin-bottom: 8px;">Your cart is empty</h3>
+                <p style="color: #64748B; margin-bottom: 20px;">Add uniforms or official campus apparel from the catalog to proceed.</p>
+                <a href="{% url 'uniforms' %}" class="btn-primary" style="display: inline-block; padding: 10px 24px; border-radius: 8px; text-decoration: none; background: #6B9080; color: #fff;">Browse Catalog</a>
+            </div>
+        {% else %}
+        
+        <form method="POST" enctype="multipart/form-data" id="checkout-main-form">
+            {% csrf_token %}
+            <div class="checkout-content">
                 
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Payment Method</h3>
-                    <div class="payment-options">
+                <!-- Left Column: Student Details & Payment Selection -->
+                <div class="checkout-form-section">
+                    
+                    <!-- Pickup Notice Banner -->
+                    <div class="pickup-badge-card">
+                        <div class="pickup-badge-icon">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                        <div class="pickup-badge-text">
+                            <h4>Counter Pickup Only (No Delivery)</h4>
+                            <p>Pick up location: <strong>DMMMSU NLUC CIS Faculty Office</strong>. Present your Digital Claim Slip upon collection.</p>
+                        </div>
+                    </div>
+
+                    <h2>Student Verification Details</h2>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label for="full_name">Student Full Name</label>
+                            <input type="text" id="full_name" value="{{ profile.full_name|default:user.get_full_name|default:user.username }}" readonly class="form-control" style="background-color: #F8FAFC;">
+                        </div>
+                        <div class="form-group">
+                            <label for="student_id">Student ID / Number</label>
+                            <input type="text" id="student_id" value="{{ profile.student_id|default:'Pending Registration ID' }}" readonly class="form-control" style="background-color: #F8FAFC;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                        <div class="form-group">
+                            <label for="course_year">Program & Year Level</label>
+                            <input type="text" id="course_year" value="{{ profile.course_year|default:'DMMMSU Student' }}" readonly class="form-control" style="background-color: #F8FAFC;">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Contact Mobile Number <span style="color:#DC2626;">*</span></label>
+                            <input type="text" name="phone" id="phone" value="{{ profile.phone_number|default:'' }}" required class="form-control" placeholder="e.g. 09123456789">
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: 30px;">Payment Method Selection</h2>
+                    <p style="font-size: 0.85rem; color: #64748B; margin-top: -15px; margin-bottom: 15px;">Choose how you wish to settle this transaction.</p>
+
+                    <div class="payment-selector-group">
                         
-                        <label class="payment-option">
-                            <input type="radio" name="payment_method" value="cash_on_CIS_faculty" required>
-                            <i class="fas fa-money-bill"></i>
-                            Cash on Hand (Pay to CIS Faculty)
+                        <!-- Option 1: Cash on Pickup -->
+                        <label class="payment-card-label selected" id="label-cash">
+                            <input type="radio" name="payment_method" value="cash" checked class="payment-card-radio" onchange="togglePaymentMode('cash')">
+                            <div class="payment-card-body">
+                                <h4><i class="fas fa-hand-holding-usd" style="color: #6B9080;"></i> Cash on Pickup (Manual Reservation)</h4>
+                                <p>Reserve uniform items online. Settle payment in cash directly at the <strong>DMMMSU NLUC CIS Faculty Office</strong> upon claiming your order.</p>
+                            </div>
+                        </label>
+
+                        <!-- Option 2: Online Payment via Proof Upload -->
+                        <label class="payment-card-label" id="label-online">
+                            <input type="radio" name="payment_method" value="online" class="payment-card-radio" onchange="togglePaymentMode('online')">
+                            <div class="payment-card-body">
+                                <h4><i class="fas fa-mobile-alt" style="color: #C86B7A;"></i> Online Payment (Reference &amp; Receipt Upload)</h4>
+                                <p>Send payment via GCash or Maya, enter reference number and upload receipt proof for verification.</p>
+                            </div>
                         </label>
                     </div>
 
-        
-                   <button type="submit" name="place_order_all" class="btn-primary btn-place-order">
-    <i class="fas fa-check"></i> Place Order
-</button>
-                </form>
-            </div>
-
-            <div class="order-summary-section">
-                <h2>Cart Items</h2>
-                <div class="order-items">
-                    {% for item in cart_items %}
-                        <div class="order-item">
-                            <div class="item-details">
-                                <h4>{{ item.uniform.name }}</h4>
-                                <p class="item-meta">{{ item.selected_size|default:item.uniform.size }} - {{ item.uniform.color }}</p>
-                                <p class="item-qty">Qty: {{ item.quantity }}</p>
+                    <!-- Online Payment Instructions & Upload Fields -->
+                    <div id="online-upload-box" class="online-instructions-panel">
+                        <div style="background: #EAF4EE; border: 1px solid #C2E2D2; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px;">
+                            <div style="font-weight: 700; color: #2C5E43; margin-bottom: 4px;">Payment Account Details:</div>
+                            <div style="font-size: 0.95rem; color: #1E293B; font-weight: 700; margin: 4px 0;">
+                                <i class="fas fa-mobile-alt" style="color: #6B9080; margin-right: 6px;"></i> GCash / Mobile: <span style="font-family: monospace; font-size: 1.1rem; color: #1E293B; background: #fff; padding: 2px 8px; border-radius: 4px; border: 1px solid #C2E2D2;">0991 553 8328</span>
                             </div>
-                            <div class="item-actions">
-                                <div class="item-price">
-                                    ₱{{ item.total_price }}
-                                </div>
-                              <div class="item-buttons">
-    <form method="POST" style="display: inline;">
-        {% csrf_token %}
-        <input type="hidden" name="item_id" value="{{ item.uniform.id }}">
-        <button type="submit" name="delete_item" class="btn-remove" title="Remove item">
-            <!-- remove icon here -->
-        </button>
-    </form>
-    <form method="POST" style="display: inline;">
-        {% csrf_token %}
-        <input type="hidden" name="item_id" value="{{ item.uniform.id }}">
-        <button type="submit" name="place_order_single" class="btn-order-item" title="Order this item">
-            <i class="fas fa-check"></i> Order
-        </button>
-    </form>
-</div>
-
+                            <div style="margin-top: 6px; font-size: 0.8rem; color: #475569;">
+                                Please transfer the exact amount (<strong>₱{{ cart_total|floatformat:2 }}</strong>) and upload the receipt screenshot below.
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
 
-                <hr>
+                        <div style="margin-bottom: 16px;">
+                            <label for="payment_reference" style="display: block; font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 6px;">
+                                Transaction / Reference Number <span style="color: #DC2626;">*</span>
+                            </label>
+                            <input type="text" name="payment_reference" id="payment_reference" class="form-control" placeholder="e.g. 100293847291">
+                        </div>
 
-                <div class="summary-calculation">
-                    <div class="calc-row">
-                        <span>Subtotal:</span>
-                        <span>₱{{ cart_total }}</span>
+                        <div>
+                            <label for="payment_receipt" style="display: block; font-weight: 600; font-size: 0.85rem; color: #334155; margin-bottom: 6px;">
+                                Upload Receipt Screenshot / Image <span style="color: #DC2626;">*</span>
+                            </label>
+                            <input type="file" name="payment_receipt" id="payment_receipt" accept="image/*" class="form-control" style="padding: 8px;">
+                            <small style="color: #64748B; font-size: 0.78rem; display: block; margin-top: 4px;">Supported formats: JPG, PNG, WEBP. Max file size: 5MB.</small>
+                        </div>
                     </div>
-                    <div class="calc-row total">
-                        <span>Total Amount:</span>
-                        <span class="final-price">₱{{ cart_total }}</span>
+
+                </div>
+
+                <!-- Right Column: Order Summary & Place Order Action -->
+                <div class="order-summary-section">
+                    <h2>Order Summary</h2>
+                    <div class="order-items" style="max-height: 380px; overflow-y: auto; padding-right: 4px;">
+                        {% for item in cart_items %}
+                            <div class="summary-order-item">
+                                <img src="{{ item.uniform.display_image_url }}" alt="{{ item.uniform.name }}" class="summary-item-thumb">
+                                
+                                <div style="flex: 1; min-width: 0;">
+                                    <h4 style="font-size: 0.88rem; font-weight: 700; color: #1E293B; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.uniform.name }}</h4>
+                                    <p style="font-size: 0.78rem; color: #64748B; margin-bottom: 2px;">
+                                        Size: <span class="item-size-pill">{{ item.selected_size }}</span>
+                                    </p>
+                                    <p style="font-size: 0.78rem; color: #64748B; margin: 0;">Qty: {{ item.quantity }} &times; ₱{{ item.uniform.price|floatformat:2 }}</p>
+                                </div>
+                                <div style="font-weight: 700; color: #1E293B; font-size: 0.92rem; text-align: right;">
+                                    ₱{{ item.total_price|floatformat:2 }}
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
+
+                    <div class="summary-calculation" style="margin-top: 16px;">
+                        <div class="calc-row" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: #64748B;">
+                            <span>Items Subtotal:</span>
+                            <span>₱{{ cart_total|floatformat:2 }}</span>
+                        </div>
+                        <div class="calc-row" style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; color: #64748B;">
+                            <span>Pickup Fee:</span>
+                            <span style="color: #6B9080; font-weight: 600;">FREE (Counter)</span>
+                        </div>
+                        <div class="calc-row total" style="display: flex; justify-content: space-between; padding-top: 12px; border-top: 2px dashed #E2E8F0; margin-top: 10px;">
+                            <span style="font-weight: 700; font-size: 1.1rem; color: #0F172A;">Total Amount:</span>
+                            <span class="final-price" style="font-weight: 800; font-size: 1.25rem; color: #C86B7A;">₱{{ cart_total|floatformat:2 }}</span>
+                        </div>
+                    </div>
+
+                    <div class="checkout-actions" style="margin-top: 24px;">
+                        <button type="submit" name="place_order_all" class="btn-order-all" style="width: 100%; background: #6B9080; color: #FFFFFF; border: none; padding: 14px 20px; border-radius: 10px; font-size: 0.95rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s ease;">
+                            <i class="fas fa-check-circle"></i> Place Order &amp; Get Claim Slip
+                        </button>
+
+                        <a href="{% url 'cart' %}" class="btn-back-cart" style="display: block; text-align: center; margin-top: 12px; color: #64748B; text-decoration: none; font-size: 0.85rem;">
+                            &larr; Modify items in Cart
+                        </a>
+                    </div>
+
+                    <div class="security-note" style="margin-top: 20px; background: #FFF9FA; border: 1px solid #FFE5EC; padding: 12px; border-radius: 8px; display: flex; gap: 10px; align-items: center;">
+                        <i class="fas fa-shield-alt" style="color: #C86B7A; font-size: 1.1rem;"></i>
+                        <p style="font-size: 0.78rem; color: #475569; margin: 0;">Present your generated Digital Claim Slip at the <strong>DMMMSU NLUC CIS Faculty Office</strong> during counter collection.</p>
+                    </div>
+
                 </div>
 
-                <div class="checkout-actions">
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit" name="place_order_all" class="btn-order-all">
-            <i class="fas fa-check"></i> Order All Items
-        </button>
-    </form>
-
-    <a href="{% url 'cart' %}" class="btn-back-cart">
-        Back to Cart
-    </a>
-</div>
-
-                    
-                <div class="security-note">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <p>Cash on Hand Payment - please settle on or before the pick-up</p>
-                </div>
             </div>
-        </div>
+        </form>
+        {% endif %}
+
     </div>
 </div>
+
+<script>
+function togglePaymentMode(mode) {
+    const onlineBox = document.getElementById('online-upload-box');
+    const labelCash = document.getElementById('label-cash');
+    const labelOnline = document.getElementById('label-online');
+    const refInput = document.getElementById('payment_reference');
+    const receiptInput = document.getElementById('payment_receipt');
+
+    if (mode === 'online') {
+        onlineBox.classList.add('active');
+        labelOnline.classList.add('selected');
+        labelCash.classList.remove('selected');
+        refInput.setAttribute('required', 'required');
+        receiptInput.setAttribute('required', 'required');
+    } else {
+        onlineBox.classList.remove('active');
+        labelCash.classList.add('selected');
+        labelOnline.classList.remove('selected');
+        refInput.removeAttribute('required');
+        receiptInput.removeAttribute('required');
+    }
+}
+</script>
 {% endblock %}

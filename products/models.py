@@ -47,6 +47,25 @@ class Uniform(models.Model):
     def get_gender_display(self):
         return self.gender
 
+    @property
+    def display_image_url(self):
+        if self.image:
+            return self.image.url
+        if self.image_url:
+            return self.image_url
+        fallback_map = {
+            1: '/static/images/mdfem.jpg',
+            2: '/static/images/mdmale.jpg',
+            3: '/static/images/tdfem.jpg',
+            4: '/static/images/tdmale.jpg',
+            5: '/static/images/slacksF.jpg',
+            6: '/static/images/slacksM.jpg',
+            7: '/static/images/wed.jpg',
+            8: '/static/images/thu.jpg',
+            9: '/static/images/newlace.jpg',
+            10: '/static/images/oldlace.jpg',
+        }
+        return fallback_map.get(self.id, '/static/images/thu.jpg')
 
     class Meta:
         ordering = ['-created_at']

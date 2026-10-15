@@ -18,7 +18,10 @@
     </div>
     {% endif %}
     
-    <a href="{% url 'adminpanel:dashboard' %}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="{% url 'adminpanel:create_admin_user' %}" class="btn btn-primary" style="background: #6B9080; border-color: #6B9080; color: #fff;">+ Add Staff / Admin</a>
+        <a href="{% url 'adminpanel:dashboard' %}" class="btn btn-secondary">&larr; Back to Dashboard</a>
+    </div>
 </div>
 
 {% if users %}

@@ -16,36 +16,45 @@
         <table class="order-history-table">
             <thead>
                 <tr>
-                    <th>Order ID</th>
+                    <th>Order & Claim Code</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Payment</th>
                     <th>Total</th>
-                    <th>Items</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for order in orders %}
                 <tr data-order-id="#{{ order.id }}">
-                    <td data-label="Order ID">#{{ order.id }}</td>
+                    <td data-label="Order & Claim Code">
+                        <strong>#{{ order.id }}</strong><br>
+                        <code style="background: #EAF4EE; color: #2C5E43; padding: 2px 6px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">{{ order.claim_code }}</code>
+                    </td>
                     <td data-label="Date">{{ order.order_date|date:"M d, Y" }}</td>
                     <td data-label="Status">
                         <span class="status status-{{ order.status|lower }}">
                             {{ order.get_status_display }}
                         </span>
                     </td>
+                    <td data-label="Payment">
+                        {% if order.payment_method == 'online' %}
+                            <span style="font-size: 0.78rem; font-weight: 700; color: #C86B7A;">Online</span>
+                        {% else %}
+                            <span style="font-size: 0.78rem; font-weight: 700; color: #2C5E43;">Cash</span>
+                        {% endif %}
+                    </td>
                     <td data-label="Total">
                         <strong>₱{{ order.total_amount|floatformat:2 }}</strong>
                     </td>
-                    <td data-label="Items">{{ order.items.all|length }}</td>
                     <td data-label="Actions">
-        <a href="{% url 'orders:order_details' order.id %}" 
+                        <a href="{% url 'orders:order_details' order.id %}" 
                            class="btn-sm btn-primary" title="View Details">
                             Details
                         </a>
                         <a href="{% url 'orders:order_receipt' order.id %}" 
-                           class="btn-sm btn-secondary" target="_blank" title="Print Receipt">
-                            Receipt
+                           class="btn-sm btn-secondary" title="View Claim Slip" style="background: #6B9080; border-color: #6B9080; color: #fff;">
+                            Claim Slip
                         </a>
                     </td>
                 </tr>

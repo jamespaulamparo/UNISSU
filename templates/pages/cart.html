@@ -11,8 +11,18 @@
 <div class="cart-page-container">
     <div class="cart-header">
         <h1>Shopping Bag</h1>
-        <p>Review your items before proceeding to checkout.</p>
+        <p>Review your uniform items before proceeding to checkout.</p>
     </div>
+
+    {% if messages %}
+        <div style="margin-bottom: 20px;">
+            {% for message in messages %}
+                <div style="padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 8px; {% if message.tags == 'error' %}background:#FEE2E2; color:#991B1B; border:1px solid #FCA5A5;{% else %}background:#EAF4EE; color:#2C5E43; border:1px solid #C2E2D2;{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
     {% if cart_items %}
         <div class="cart-layout">
@@ -20,18 +30,14 @@
             <div class="cart-items-list">
                 {% for item in cart_items %}
                     <div class="cart-item-card">
-                        <!-- Dynamic pastel background for thumbnails -->
+                        <!-- Dynamic pastel background for thumbnails with actual product image -->
                         <div class="item-image-box {% cycle 'bg-pink' 'bg-green' %}">
-                            {% if item.uniform.image %}
-                                <img src="{{ item.uniform.image.url }}" alt="{{ item.uniform.name }}">
-                            {% else %}
-                                <i class="fas fa-shirt"></i>
-                            {% endif %}
+                            <img src="{{ item.uniform.display_image_url }}" alt="{{ item.uniform.name }}" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         
                         <div class="item-details">
                             <h3>{{ item.uniform.name }}</h3>
-                            <span class="item-meta">Size: {{ item.selected_size|default:item.uniform.size }} • Color: {{ item.uniform.color|default:"Standard" }}</span>
+                            <span class="item-meta">Size: <strong>{{ item.selected_size|default:item.uniform.size }}</strong> &bull; Color: {{ item.uniform.color|default:"Standard" }}</span>
                             <div class="item-price">₱{{ item.uniform.price|floatformat:2 }}</div>
                         </div>
 
@@ -66,8 +72,8 @@
                         <span>₱{{ cart_total|floatformat:2 }}</span>
                     </div>
                     <div class="summary-row">
-                        <span>Discount</span>
-                        <span class="text-pink">-₱0.00</span>
+                        <span>Pickup Fee</span>
+                        <span class="text-pink">FREE</span>
                     </div>
                     
                     <div class="summary-divider"></div>
@@ -77,8 +83,35 @@
                         <span>₱{{ cart_total|floatformat:2 }}</span>
                     </div>
 
-                    <a href="{% url 'checkout' %}" class="btn-checkout">Proceed to Checkout</a>
-                    <a href="{% url 'uniforms' %}" class="btn-continue">Continue Shopping</a>
+                    <!-- Pickup Station Reminder -->
+                    <div style="margin: 16px 0; padding: 12px; background: #EAF4EE; border-radius: 8px; font-size: 0.8rem; color: #2C5E43; display: flex; gap: 8px; align-items: center; border: 1px solid #C2E2D2;">
+                        <i class="fas fa-map-marker-alt" style="color: #6B9080;"></i>
+                        <span>Pickup: <strong>DMMMSU NLUC CIS Faculty Office</strong></span>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'checkout' %}" class="btn-checkout">Proceed to Checkout</a>
+                    {% else %}
+                        <!-- Modern, friendly guest notice with clear options -->
+                        <div style="margin-top: 14px; padding: 16px; background: #FFF9FA; border: 1.5px dashed #F4ACB7; border-radius: 12px; text-align: center;">
+                            <div style="font-weight: 700; font-size: 0.88rem; color: #1E293B; margin-bottom: 4px;">
+                                <i class="fas fa-user-lock" style="color: #C86B7A; margin-right: 4px;"></i> Student Sign-In Required
+                            </div>
+                            <p style="font-size: 0.78rem; color: #64748B; margin-bottom: 12px; line-height: 1.4;">
+                                You need to be logged in to reserve items and generate your Digital Claim Slip.
+                            </p>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <a href="{% url 'login' %}?next={% url 'checkout' %}" class="btn-checkout" style="text-align: center; font-size: 0.85rem; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                    <i class="fas fa-sign-in-alt"></i> Log In to Checkout
+                                </a>
+                                <a href="{% url 'register' %}?next={% url 'checkout' %}" style="display: block; padding: 8px; border-radius: 8px; border: 1.5px solid #6B9080; color: #6B9080; font-weight: 700; font-size: 0.82rem; text-decoration: none; text-align: center;">
+                                    Create Student Account
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <a href="{% url 'uniforms' %}" class="btn-continue" style="margin-top: 12px; display: block; text-align: center;">Continue Shopping</a>
                 </div>
             </div>
         </div>
@@ -90,7 +123,7 @@
             </div>
             <h2>Your bag is empty</h2>
             <p>Looks like you haven't added any gear to your cart yet.</p>
-            <a href="{% url 'uniforms' %}" class="btn-checkout" style="max-width: 250px; margin: 0 auto;">Browse Catalog</a>
+            <a href="{% url 'uniforms' %}" class="btn-checkout" style="max-width: 250px; margin: 0 auto; display: block; text-align: center;">Browse Catalog</a>
         </div>
     {% endif %}
 </div>

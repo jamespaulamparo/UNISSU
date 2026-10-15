@@ -1,0 +1,88 @@
+{% extends 'adminpanel/base.html' %}
+
+{% block title %}Create Staff or Administrator Account{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div>
+        <h1 style="font-size: 1.5rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Create Administrative Account</h1>
+        <p style="color: #64748B; font-size: 0.9rem;">Add an authorized CIS Faculty staff member or portal administrator.</p>
+    </div>
+    <a href="{% url 'adminpanel:users_list' %}" class="btn btn-secondary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.875rem;">&larr; Back to Users</a>
+</div>
+
+<div style="background: #FFFFFF; border-radius: 16px; border: 1px solid rgba(15, 23, 42, 0.08); padding: 32px; max-width: 640px; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);">
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div style="background: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 0.875rem;">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.username.id_for_label }}" style="display: block; font-weight: 600; font-size: 0.875rem; color: #334155; margin-bottom: 6px;">Username</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ form.username.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.full_name.id_for_label }}" style="display: block; font-weight: 600; font-size: 0.875rem; color: #334155; margin-bottom: 6px;">Full Name</label>
+            {{ form.full_name }}
+            {% if form.full_name.errors %}
+                <div style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ form.full_name.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.email.id_for_label }}" style="display: block; font-weight: 600; font-size: 0.875rem; color: #334155; margin-bottom: 6px;">Institutional Email Address</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ form.email.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label for="{{ form.role.id_for_label }}" style="display: block; font-weight: 600; font-size: 0.875rem; color: #334155; margin-bottom: 6px;">Assigned Role</label>
+            {{ form.role }}
+            {% if form.role.errors %}
+                <div style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ form.role.errors.0 }}</div>
+            {% endif %}
+            <small style="color: #64748B; font-size: 0.8rem; display: block; margin-top: 4px;">
+                {% if is_su %}
+                    Superusers have unrestricted access. Store Administrators can manage catalog and orders. Staff can review and fulfill pickup orders.
+                {% else %}
+                    You can create Staff personnel or Store Administrators.
+                {% endif %}
+            </small>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <div>
+                <label for="{{ form.password.id_for_label }}" style="display: block; font-weight: 600; font-size: 0.875rem; color: #334155; margin-bottom: 6px;">Password</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ form.password.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <label for="{{ form.password_confirm.id_for_label }}" style="display: block; font-weight: 600; font-size: 0.875rem; color: #334155; margin-bottom: 6px;">Confirm Password</label>
+                {{ form.password_confirm }}
+                {% if form.password_confirm.errors %}
+                    <div style="color: #DC2626; font-size: 0.8rem; margin-top: 4px;">{{ form.password_confirm.errors.0 }}</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center; border-top: 1px solid #F1F5F9; padding-top: 20px;">
+            <button type="submit" class="ap-btn" style="background: #6B9080; color: #FFFFFF; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-user-plus" style="margin-right: 6px;"></i> Create Account
+            </button>
+            <a href="{% url 'adminpanel:users_list' %}" style="color: #64748B; text-decoration: none; font-size: 0.875rem; margin-left: 8px;">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

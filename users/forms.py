@@ -135,6 +135,8 @@ class RegistrationForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         user.email = self.cleaned_data['email']
+        user.is_staff = False
+        user.is_superuser = False
         
         # Populate first_name / last_name from full_name if possible
         full_name = self.cleaned_data.get('full_name', '').strip()

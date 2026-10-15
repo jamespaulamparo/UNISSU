@@ -1,108 +1,369 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Receipt #{{ order.id }} - Order Receipt{% endblock %}
+{% block title %}Official Digital Claim Slip #{{ order.claim_code }} — UNISSU{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/orderDetails.css' %}">
 <style>
-    @media print {
-        body * { visibility: hidden; }
-        .receipt-printable, .receipt-printable * { visibility: visible; }
-        .receipt-printable { position: absolute; left: 0; top: 0; width: 100%; }
-        nav, footer, .btn { display: none !important; }
-        body { font-size: 12pt; }
+/* ==========================================================================
+   UNISSU — Official Digital Claim Slip & Order Receipt
+   Pastel Pink & Green Minimalist Aesthetic
+   ========================================================================== */
+.claim-slip-wrapper {
+    padding: 40px 16px;
+    background: linear-gradient(180deg, #FDF7F8 0%, #F8FAFC 100%);
+    min-height: calc(100vh - 120px);
+}
+.claim-slip-container {
+    max-width: 780px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border-radius: 20px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+.claim-slip-header {
+    background: linear-gradient(135deg, #FFE5EC 0%, #EAF4EE 100%);
+    padding: 32px 36px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    position: relative;
+}
+.claim-slip-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.claim-slip-logo {
+    height: 48px;
+    width: auto;
+}
+.claim-slip-title h2 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1E293B;
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+.claim-slip-title p {
+    font-size: 0.85rem;
+    color: #64748B;
+    margin: 2px 0 0 0;
+}
+.claim-voucher-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+    border: 1px dashed #CBD5E1;
+}
+.claim-code-block h4 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748B;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+}
+.claim-code-block .claim-code-text {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #6B9080;
+    font-family: monospace;
+    letter-spacing: 0.05em;
+}
+.claim-status-pill {
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.status-approved {
+    background: #EAF4EE;
+    color: #2C5E43;
+    border: 1px solid #C2E2D2;
+}
+.status-pending {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+.status-completed {
+    background: #E0E7FF;
+    color: #3730A3;
+    border: 1px solid #C7D2FE;
+}
+.status-rejected {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FCA5A5;
+}
+.claim-slip-body {
+    padding: 32px 36px;
+}
+.info-section-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1E293B;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #F1F5F9;
+    padding-bottom: 8px;
+}
+.student-data-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.data-box label {
+    display: block;
+    font-size: 0.75rem;
+    color: #64748B;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+.data-box span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+.pickup-notice-box {
+    background: #F8FAFC;
+    border-left: 4px solid #6B9080;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+}
+.pickup-notice-box h5 {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 2px;
+}
+.pickup-notice-box p {
+    font-size: 0.82rem;
+    color: #475569;
+    margin: 0;
+}
+.items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+}
+.items-table th {
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #64748B;
+    padding: 10px 0;
+    border-bottom: 2px solid #F1F5F9;
+    text-transform: uppercase;
+}
+.items-table td {
+    padding: 14px 0;
+    font-size: 0.88rem;
+    border-bottom: 1px solid #F1F5F9;
+    color: #1E293B;
+}
+.size-badge {
+    background: #FFE5EC;
+    color: #C86B7A;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.75rem;
+}
+.claim-slip-footer {
+    background: #FAF8F9;
+    padding: 24px 36px;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.actions-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+}
+@media print {
+    body * { visibility: hidden; }
+    .claim-slip-container, .claim-slip-container * { visibility: visible; }
+    .claim-slip-container {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
     }
-    .receipt-header { text-align: center; margin-bottom: 30px; }
-    .receipt-logo { max-width: 150px; height: auto; margin-bottom: 10px; }
-    .receipt-id { font-size: 24pt; font-weight: bold; color: var(--brand-blue-dark); }
-    .receipt-table { width: 100%; margin: 20px 0; }
-    .receipt-table th, .receipt-table td { padding: 12px; border: 1px solid #ddd; }
-    .receipt-total { font-size: 18pt; font-weight: bold; text-align: right; margin-top: 20px; }
-    .receipt-footer { margin-top: 40px; text-align: center; font-style: italic; color: #666; }
+    .navbar, footer, .actions-group, .no-print { display: none !important; }
+}
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="order-detail-container receipt-printable">
-    <!-- Receipt Header -->
-    <div class="receipt-header">
-        <img src="{% static 'images/logo.jpg' %}" alt="Logo" class="receipt-logo" onerror="this.style.display='none'">
-        <h1>Order Receipt</h1>
-        <div class="receipt-id">Receipt #{{ order.id }}</div>
-        <p>Date: {{ order.order_date|date:"F d, Y H:i" }}</p>
-        <p>Status: <span style="color: {% if order.status == 'delivered' %}green{% elif order.status == 'cancelled' %}red{% else %}orange{% endif %};">{{ order.get_status_display }}</span></p>
+<div class="claim-slip-wrapper">
+    <div class="claim-slip-container">
+        
+        <!-- Header Banner with Brand & Claim Voucher -->
+        <div class="claim-slip-header">
+            <div class="claim-slip-brand">
+                <img src="{% static 'images/unissuLogo.svg' %}" alt="UNISSU Logo" class="claim-slip-logo" onerror="this.style.display='none'">
+                <div class="claim-slip-title">
+                    <h2>UNISSU &bull; DMMMSU Official Uniform Issuance</h2>
+                    <p>Digital Claim Slip & Official Transaction Record</p>
+                </div>
+            </div>
+
+            <div class="claim-voucher-card">
+                <div class="claim-code-block">
+                    <h4>Official Claim Code</h4>
+                    <div class="claim-code-text">{{ order.claim_code }}</div>
+                </div>
+                <div>
+                    {% if order.status == 'approved' %}
+                        <div class="claim-status-pill status-approved">
+                            <i class="fas fa-check-circle"></i> READY FOR PICKUP
+                        </div>
+                    {% elif order.status == 'completed' %}
+                        <div class="claim-status-pill status-completed">
+                            <i class="fas fa-box-check"></i> ORDER COMPLETED (CLAIMED)
+                        </div>
+                    {% elif order.status == 'rejected' %}
+                        <div class="claim-status-pill status-rejected">
+                            <i class="fas fa-times-circle"></i> ORDER REJECTED
+                        </div>
+                    {% else %}
+                        <div class="claim-status-pill status-pending">
+                            <i class="fas fa-hourglass-half"></i> PENDING VERIFICATION
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Body Details -->
+        <div class="claim-slip-body">
+            
+            <!-- Instructions banner -->
+            <div class="pickup-notice-box">
+                <h5><i class="fas fa-building" style="color: #6B9080; margin-right: 6px;"></i> Pickup Station: {{ order.pickup_location }}</h5>
+                <p>
+                    {% if order.status == 'approved' %}
+                        Your order is approved and ready. Present this digital screen or a printed copy to the CIS Faculty Office personnel to claim your physical uniform items.
+                    {% elif order.status == 'completed' %}
+                        This transaction has been completed. The items were physically released to you.
+                    {% elif order.status == 'rejected' %}
+                        This order could not be approved. {% if order.admin_notes %}Note: <strong>{{ order.admin_notes }}</strong>{% endif %}. Please coordinate with the CIS Faculty Office personnel.
+                    {% else %}
+                        Your order has been submitted. The CIS Faculty Office personnel is reviewing your reservation/payment. Once marked <strong>Approved</strong>, you may claim your items.
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Student Identification -->
+            <div class="info-section-title">Student & Order Details</div>
+            <div class="student-data-grid">
+                <div class="data-box">
+                    <label>Student Full Name</label>
+                    <span>{{ order.customer_name }}</span>
+                </div>
+                <div class="data-box">
+                    <label>Student / ID Number</label>
+                    <span>{{ order.student_id|default:"Standard Student" }}</span>
+                </div>
+                <div class="data-box">
+                    <label>Program & Year</label>
+                    <span>{{ order.course_year|default:"DMMMSU NLUC" }}</span>
+                </div>
+                <div class="data-box">
+                    <label>Order Date & Time</label>
+                    <span>{{ order.order_date|date:"F d, Y • g:i A" }}</span>
+                </div>
+                <div class="data-box">
+                    <label>Payment Method</label>
+                    <span>
+                        {% if order.payment_method == 'online' %}
+                            Online Payment (Ref: {{ order.payment_reference }})
+                        {% else %}
+                            Cash on Pickup
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="data-box">
+                    <label>Contact Mobile</label>
+                    <span>{{ order.phone|default:"N/A" }}</span>
+                </div>
+            </div>
+
+            <!-- Ordered Merchandise Table -->
+            <div class="info-section-title">Apparel Items Breakdown</div>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Item Description</th>
+                        <th>Selected Size</th>
+                        <th style="text-align: right;">Unit Price</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                        <tr>
+                            <td><strong>{{ item.product_name }}</strong></td>
+                            <td><span class="size-badge">{{ item.size|default:"Standard" }}</span></td>
+                            <td style="text-align: right; color: #64748B;">₱{{ item.price|floatformat:2 }}</td>
+                            <td style="text-align: center; font-weight: 600;">{{ item.quantity }}</td>
+                            <td style="text-align: right; font-weight: 700;">₱{{ item.get_total_price|floatformat:2 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #94A3B8; padding: 20px;">No items attached.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: 700; padding-top: 16px; font-size: 1rem;">Total Amount Due:</td>
+                        <td style="text-align: right; font-weight: 800; font-size: 1.25rem; color: #C86B7A; padding-top: 16px;">₱{{ order.total_amount|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+
+        <!-- Footer Bar -->
+        <div class="claim-slip-footer">
+            <small style="color: #64748B;">Official DMMMSU NLUC Uniform Ordering System &bull; Present during counter pickup</small>
+            <span style="font-size: 0.82rem; font-weight: 700; color: #1E293B;">Order #{{ order.id }}</span>
+        </div>
+
     </div>
 
-    <!-- Customer Info -->
-    <div class="section">
-        <h2>Bill To:</h2>
-        <div class="info-grid">
-            <div class="info-item">
-                <label>Name</label>
-                <p>{{ order.customer_name }}</p>
-            </div>
-            <div class="info-item">
-                <label>Email</label>
-                <p>{{ order.email }}</p>
-            </div>
-            <div class="info-item">
-                <label>Phone</label>
-                <p>{{ order.phone|default:"N/A" }}</p>
-            </div>
-            <div class="info-item">
-                <label>Address</label>
-                <p>{{ order.address }}</p>
-            </div>
+    <!-- Print and Navigation Actions -->
+    <div class="actions-group no-print">
+        <button onclick="window.print();" class="btn" style="background: #6B9080; color: #FFFFFF; border: none; padding: 10px 24px; border-radius: 8px; font-weight: 700; cursor: pointer;">
+            <i class="fas fa-print" style="margin-right: 6px;"></i> Print Claim Slip
+        </button>
+        <a href="{% url 'orders:order_history' %}" class="btn" style="background: #FFFFFF; color: #475569; border: 1px solid #CBD5E1; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none;">
+            My Orders
+        </a>
+        <a href="{% url 'uniforms' %}" class="btn" style="background: #FFE5EC; color: #C86B7A; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; text-decoration: none;">
+            Store Catalog
+        </a>
     </div>
 
-    <!-- Items Table -->
-    <div class="section">
-        <h2>Order Items</h2>
-        <table class="items-table receipt-table">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in order.items.all %}
-                <tr>
-                    <td>{{ item.product_name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>₱{{ item.price }}</td>
-                    <td>₱{{ item.get_total_price }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4">No items</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="summary">
-            <div class="summary-row">
-                <span>Subtotal:</span>
-                <span>₱{{ order.get_total }}</span>
-            </div>
-            <div class="summary-row total">
-                <span>Total Amount:</span>
-                <span>₱{{ order.total_amount }}</span>
-            </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="receipt-footer">
-        <p>Thank you for your order!</p>
-        <p>This is your official receipt. Please keep for your records.</p>
-        <small>Generated on {{ order.updated_at|date:"F d, Y H:i" }}</small>
-    </div>
-
-    <div style="text-align: center; margin-top: 30px;">
-        <a href="javascript:window.print()" class="btn btn-primary">🖨️ Print Receipt</a>
-        <a href="{% url 'orders:order_history' %}" class="btn btn-secondary">← Back to History</a>
-    </div>
+</div>
 {% endblock %}

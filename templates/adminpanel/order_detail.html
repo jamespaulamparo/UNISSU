@@ -1,170 +1,267 @@
 {% extends 'adminpanel/base.html' %}
+{% load static %}
 
-{% block title %}Order #{{ order.id }}{% endblock %}
+{% block title %}Order #{{ order.id }} Review & Verification{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h1>Order #{{ order.id }}</h1>
-    <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-secondary">&larr; Back to Orders</a>
-</div>
-
-<div class="order-detail-container">
-    <div class="order-info-card">
-        <h2>Customer Information</h2>
-        <div class="info-grid">
-            <div class="info-item">
-                <label>Customer Name:</label>
-                <span>{{ order.customer_name }}</span>
-            </div>
-            <div class="info-item">
-                <label>Email:</label>
-                <span>{{ order.email }}</span>
-            </div>
-            <div class="info-item">
-                <label>Phone:</label>
-                <span>{{ order.phone|default:"N/A" }}</span>
-            </div>
-            <div class="info-item">
-                <label>Address:</label>
-                <span>{{ order.address }}</span>
-            </div>
-        </div>
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div>
+        <h1 style="font-size: 1.5rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">
+            Order #{{ order.id }} 
+            <span style="font-size: 0.95rem; font-weight: 500; color: #64748B;">• Claim Code: <strong style="color: #6B9080;">{{ order.claim_code }}</strong></span>
+        </h1>
+        <p style="color: #64748B; font-size: 0.88rem;">Submitted on {{ order.order_date|date:"F d, Y at g:i A" }}</p>
     </div>
-
-    <div class="order-info-card">
-        <h2>Order Status</h2>
-        <form method="post" action="{% url 'adminpanel:update_order_status' order.id %}">
-            {% csrf_token %}
-            <div class="status-form">
-                <label>Current Status:</label>
-                <select name="status" class="status-select">
-                    <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
-                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
-                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
-                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
-                </select>
-                <button type="submit" class="btn btn-primary">Update Status</button>
-            </div>
-        </form>
-        <div class="order-meta">
-            <p><strong>Order Date:</strong> {{ order.order_date|date:"F d, Y at g:i A" }}</p>
-            <p><strong>Last Updated:</strong> {{ order.updated_at|date:"F d, Y at g:i A" }}</p>
-        </div>
-    </div>
-
-    <div class="order-info-card">
-        <h2>Order Summary</h2>
-        <div class="order-total">
-            <span>Total Amount:</span>
-            <strong>₱{{ order.total_amount|floatformat:2 }}</strong>
-        </div>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-secondary">&larr; Back to Orders</a>
     </div>
 </div>
 
-<style>
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-.page-header h1 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-.order-detail-container {
-    display: grid;
-    gap: 20px;
-}
-.order-info-card {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.order-info-card h2 {
-    margin: 0 0 15px 0;
-    font-size: 1.1rem;
-    color: #333;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-}
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-}
-.info-item {
-    display: flex;
-    flex-direction: column;
-}
-.info-item label {
-    font-size: 0.8rem;
-    color: #666;
-    margin-bottom: 4px;
-}
-.info-item span {
-    font-size: 1rem;
-    color: #333;
-}
-.status-form {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-.status-form label {
-    font-weight: 500;
-}
-.status-select {
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    min-width: 150px;
-}
-.order-meta {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-}
-.order-meta p {
-    margin: 5px 0;
-    font-size: 0.9rem;
-    color: #666;
-}
-.order-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.2rem;
-}
-.order-total strong {
-    color: #28a745;
-    font-size: 1.5rem;
-}
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    display: inline-block;
-    border: none;
-    cursor: pointer;
-}
-.btn-secondary {
-    background-color: #6c757d;
-    color: white;
-}
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-}
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-</style>
+<div class="order-detail-container" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    
+    <!-- Left Column: Order Items & Payment Verification -->
+    <div>
+        
+        <!-- Action Flowchart Banner based on Order Status -->
+        <div style="background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.08); padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                <h3 style="font-size: 1rem; font-weight: 700; color: #1E293B; margin: 0;">Operational Workflow Actions</h3>
+                
+                {% if order.status == 'pending' %}
+                    <span style="background: #FEF3C7; color: #92400E; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                        <i class="fas fa-clock"></i> Pending Admin Verification
+                    </span>
+                {% elif order.status == 'approved' %}
+                    <span style="background: #D1FAE5; color: #065F46; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                        <i class="fas fa-check-circle"></i> Approved • Ready for Pickup
+                    </span>
+                {% elif order.status == 'completed' %}
+                    <span style="background: #E0E7FF; color: #3730A3; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                        <i class="fas fa-box-check"></i> Completed • Items Handed Over
+                    </span>
+                {% elif order.status == 'rejected' %}
+                    <span style="background: #FEE2E2; color: #991B1B; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </span>
+                {% else %}
+                    <span style="background: #F1F5F9; color: #475569; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;">
+                        {{ order.get_status_display }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <!-- Workflow Action Buttons -->
+            {% if order.status == 'pending' %}
+                <p style="font-size: 0.85rem; color: #475569; margin-bottom: 16px;">
+                    Review the payment reference or cash reservation below. Approving will automatically decrement item stock in inventory and authorize the student's Digital Claim Slip.
+                </p>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="approve">
+                        <button type="submit" class="btn" style="background: #6B9080; color: #fff; font-weight: 600; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;" onclick="return confirm('Approve order and deduct inventory stock?');">
+                            <i class="fas fa-check"></i> Approve & Ready for Pickup
+                        </button>
+                    </form>
+
+                    <button type="button" class="btn" style="background: #EF4444; color: #fff; font-weight: 600; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;" onclick="document.getElementById('reject-form-modal').style.display='block';">
+                        <i class="fas fa-times"></i> Reject Order
+                    </button>
+                </div>
+
+                <!-- Rejection Form Popup / Box -->
+                <div id="reject-form-modal" style="display: none; margin-top: 16px; padding: 16px; background: #FFF5F5; border: 1px solid #FED7D7; border-radius: 8px;">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reject">
+                        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #9B2C2C; margin-bottom: 6px;">Reason for Rejection (Visible to student):</label>
+                        <input type="text" name="admin_notes" class="form-control" placeholder="e.g. Invalid payment reference number, unclear receipt screenshot, or out of stock" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #CBD5E1; border-radius: 6px;">
+                        <div style="display: flex; gap: 8px;">
+                            <button type="submit" class="btn" style="background: #DC2626; color: #fff; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer;">Confirm Rejection</button>
+                            <button type="button" class="btn btn-secondary" style="padding: 6px 14px; border-radius: 6px; cursor: pointer;" onclick="document.getElementById('reject-form-modal').style.display='none';">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+            {% elif order.status == 'approved' %}
+                <p style="font-size: 0.85rem; color: #065F46; margin-bottom: 14px;">
+                    This order is verified and ready for counter pickup. When the student presents their Digital Claim Slip at the CIS Faculty Office, confirm the items and mark as handed over.
+                </p>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="complete">
+                    <button type="submit" class="btn" style="background: #10B981; color: #fff; font-weight: 600; padding: 10px 24px; border-radius: 8px; border: none; cursor: pointer;" onclick="return confirm('Confirm that items were physically handed over to the student?');">
+                        <i class="fas fa-hand-holding"></i> Confirm Physical Handover (Mark Completed)
+                    </button>
+                </form>
+
+            {% elif order.status == 'completed' %}
+                <div style="color: #3730A3; font-size: 0.88rem;">
+                    <i class="fas fa-check-double"></i> Order completed. Items released to student{% if order.claimed_at %} on {{ order.claimed_at|date:"M d, Y at g:i A" }}{% endif %}.
+                </div>
+            {% elif order.status == 'rejected' %}
+                <div style="color: #991B1B; font-size: 0.88rem;">
+                    <i class="fas fa-ban"></i> Order was rejected.{% if order.admin_notes %} Reason: <em>{{ order.admin_notes }}</em>{% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Payment Verification Card -->
+        <div style="background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.08); padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            <h2 style="font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 16px; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">
+                <i class="fas fa-credit-card" style="color: #6B9080; margin-right: 6px;"></i> Payment Details & Proof
+            </h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                    <label style="font-size: 0.8rem; color: #64748B; display: block; margin-bottom: 4px;">Payment Method:</label>
+                    <span style="font-weight: 700; font-size: 0.95rem; color: #1E293B;">
+                        {% if order.payment_method == 'online' %}
+                            <i class="fas fa-mobile-alt" style="color: #C86B7A;"></i> Online Payment
+                        {% else %}
+                            <i class="fas fa-hand-holding-usd" style="color: #6B9080;"></i> Cash on Pickup
+                        {% endif %}
+                    </span>
+                </div>
+                <div>
+                    <label style="font-size: 0.8rem; color: #64748B; display: block; margin-bottom: 4px;">Reference / Transaction ID:</label>
+                    <span style="font-weight: 700; font-size: 0.95rem; color: #1E293B;">
+                        {{ order.payment_reference|default:"None (Cash Reservation)" }}
+                    </span>
+                </div>
+            </div>
+
+            {% if order.payment_receipt %}
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px dashed #E2E8F0;">
+                    <label style="font-size: 0.85rem; font-weight: 600; color: #334155; display: block; margin-bottom: 8px;">Uploaded Receipt Screenshot:</label>
+                    <a href="{{ order.payment_receipt.url }}" target="_blank" title="Click to view full image">
+                        <img src="{{ order.payment_receipt.url }}" alt="Receipt Proof" style="max-width: 260px; max-height: 260px; border-radius: 8px; border: 1px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.06); object-fit: contain;">
+                    </a>
+                    <div style="font-size: 0.78rem; color: #64748B; margin-top: 4px;">Click image to inspect in full resolution.</div>
+                </div>
+            {% else %}
+                <div style="font-size: 0.85rem; color: #64748B; margin-top: 8px;">
+                    <i class="fas fa-info-circle"></i> No digital receipt uploaded (Customer will pay cash upon counter pickup).
+                </div>
+            {% endif %}
+
+            {% if order.admin_notes %}
+                <div style="margin-top: 16px; padding: 12px; background: #F8FAFC; border-left: 3px solid #6B9080; border-radius: 4px;">
+                    <span style="font-size: 0.8rem; font-weight: 600; color: #475569; display: block;">Administrative Notes:</span>
+                    <span style="font-size: 0.88rem; color: #1E293B;">{{ order.admin_notes }}</span>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Ordered Items Table -->
+        <div style="background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.08); padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            <h2 style="font-size: 1.1rem; font-weight: 700; color: #1E293B; margin-bottom: 16px; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">
+                <i class="fas fa-tshirt" style="color: #6B9080; margin-right: 6px;"></i> Reserved Apparel Items
+            </h2>
+            
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #F1F5F9; text-align: left; color: #64748B; font-size: 0.8rem;">
+                        <th style="padding: 10px 0;">Item</th>
+                        <th style="padding: 10px;">Size</th>
+                        <th style="padding: 10px; text-align: right;">Unit Price</th>
+                        <th style="padding: 10px; text-align: center;">Qty</th>
+                        <th style="padding: 10px; text-align: right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                        <tr style="border-bottom: 1px solid #F1F5F9;">
+                            <td style="padding: 12px 0; font-weight: 600; color: #1E293B;">{{ item.product_name }}</td>
+                            <td style="padding: 12px 10px;">
+                                <span style="background: #FFE5EC; color: #C86B7A; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">
+                                    {{ item.size|default:"Standard" }}
+                                </span>
+                            </td>
+                            <td style="padding: 12px 10px; text-align: right; color: #475569;">₱{{ item.price|floatformat:2 }}</td>
+                            <td style="padding: 12px 10px; text-align: center; color: #1E293B; font-weight: 600;">{{ item.quantity }}</td>
+                            <td style="padding: 12px 10px; text-align: right; font-weight: 700; color: #1E293B;">₱{{ item.get_total_price|floatformat:2 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 20px; text-align: center; color: #94A3B8;">No items recorded for this order.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr style="border-top: 2px solid #CBD5E1;">
+                        <td colspan="4" style="padding: 14px 10px; font-weight: 700; color: #1E293B; text-align: right;">Total Amount Due:</td>
+                        <td style="padding: 14px 10px; font-weight: 800; font-size: 1.15rem; color: #C86B7A; text-align: right;">₱{{ order.total_amount|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Right Column: Student Info & Order Administration -->
+    <div>
+        
+        <!-- Student Information Card -->
+        <div style="background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.08); padding: 20px; margin-bottom: 24px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            <h2 style="font-size: 1.05rem; font-weight: 700; color: #1E293B; margin-bottom: 14px; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">
+                <i class="fas fa-user-graduate" style="color: #6B9080; margin-right: 6px;"></i> Student Details
+            </h2>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 0.78rem; color: #64748B; display: block;">Full Name:</label>
+                <span style="font-weight: 600; font-size: 0.92rem; color: #1E293B;">{{ order.customer_name }}</span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 0.78rem; color: #64748B; display: block;">Student ID / Number:</label>
+                <span style="font-weight: 600; font-size: 0.92rem; color: #1E293B;">{{ order.student_id|default:"Not specified" }}</span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 0.78rem; color: #64748B; display: block;">Program & Year:</label>
+                <span style="font-weight: 600; font-size: 0.92rem; color: #1E293B;">{{ order.course_year|default:"Not specified" }}</span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 0.78rem; color: #64748B; display: block;">Email Address:</label>
+                <span style="font-size: 0.88rem; color: #1E293B;">{{ order.email }}</span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <label style="font-size: 0.78rem; color: #64748B; display: block;">Phone Number:</label>
+                <span style="font-size: 0.88rem; color: #1E293B;">{{ order.phone|default:"N/A" }}</span>
+            </div>
+
+            <div style="margin-top: 16px; padding: 12px; background: #EAF4EE; border-radius: 8px;">
+                <label style="font-size: 0.78rem; color: #2C5E43; font-weight: 700; display: block; margin-bottom: 2px;">Designated Pickup Station:</label>
+                <span style="font-size: 0.85rem; color: #1E293B;">{{ order.pickup_location }}</span>
+            </div>
+        </div>
+
+        <!-- Manual Status Override Card -->
+        <div style="background: #FFFFFF; border-radius: 12px; border: 1px solid rgba(15, 23, 42, 0.08); padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+            <h2 style="font-size: 1.05rem; font-weight: 700; color: #1E293B; margin-bottom: 14px; border-bottom: 2px solid #E2E8F0; padding-bottom: 8px;">
+                <i class="fas fa-sliders-h" style="color: #6B9080; margin-right: 6px;"></i> Status Override
+            </h2>
+
+            <form method="post" action="{% url 'adminpanel:update_order_status' order.id %}">
+                {% csrf_token %}
+                <div style="margin-bottom: 14px;">
+                    <label style="font-size: 0.8rem; color: #64748B; display: block; margin-bottom: 4px;">Update Status:</label>
+                    <select name="status" class="form-control" style="width: 100%; padding: 8px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.88rem;">
+                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending Verification</option>
+                        <option value="approved" {% if order.status == 'approved' %}selected{% endif %}>Approved / Ready for Pickup</option>
+                        <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Completed / Claimed</option>
+                        <option value="rejected" {% if order.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">Save Status Change</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
 {% endblock %}
-
-

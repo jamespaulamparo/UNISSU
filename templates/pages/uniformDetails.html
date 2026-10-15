@@ -5,6 +5,27 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/uniformDetail.css' %}">
+<style>
+.one-size-badge-box {
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+.one-size-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    background: var(--slate-900);
+    border: 1.5px solid var(--slate-900);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+    font-family: var(--font-main);
+    letter-spacing: 0.02em;
+}
+</style>
 {% endblock %}
 
 {% block content %}
@@ -18,37 +39,7 @@
         <!-- Left: Product Image Gallery -->
         <div class="product-gallery">
             <div class="main-image-box">
-                {% if uniform.image %}
-                    <img src="{{ uniform.image.url }}" alt="{{ uniform.name }}" class="fitted-image">
-                {% else %}
-                    {% if uniform.id == 1 %}
-                        <img src="{% static 'images/mdfem.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 2 %}
-                        <img src="{% static 'images/mdmale.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 3 %}
-                        <img src="{% static 'images/tdfem.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 4 %}
-                        <img src="{% static 'images/tdmale.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 5 %}
-                        <img src="{% static 'images/slacksF.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 6 %}
-                        <img src="{% static 'images/slacksM.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 7 %}
-                        <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 8 %}
-                        <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 9 %}
-                        <img src="{% static 'images/newlace.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% elif uniform.id == 10 %}
-                        <img src="{% static 'images/oldLace.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                    {% else %}
-                        {% if uniform.gender == 'Female' %}
-                            <img src="{% static 'images/wed.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                        {% else %}
-                            <img src="{% static 'images/thu.jpg' %}" alt="{{ uniform.name }}" class="fitted-image">
-                        {% endif %}
-                    {% endif %}
-                {% endif %}
+                <img src="{{ uniform.display_image_url }}" alt="{{ uniform.name }}" class="fitted-image">
             </div>
         </div>
 
@@ -60,22 +51,36 @@
                 <div class="price-display">₱{{ uniform.price|floatformat:2 }}</div>
             </div>
 
-            <p class="product-description">{{ uniform.description }}</p>
+            <p class="product-description">{{ uniform.description|default:"Official DMMMSU NLUC prescribed attire and accessories." }}</p>
 
-            <form method="POST" action="{% url 'add_to_cart' uniform.id %}" class="purchase-form">
+            <form method="POST" action="{% url 'add_to_cart' uniform.id %}" class="purchase-form" id="uniform-order-form">
                 {% csrf_token %}
-                <input type="hidden" name="size" id="selected_size" value="{% if uniform.id == 9 %}One Size{% else %} {% endif %}">
-
-                <!-- Size Selection -->
-                <div class="form-section">
-                    <div class="section-label">
-                        <span>Select Size</span>
-                        <span id="selected-size-text" class="text-pink"></span>
-                    </div>
+                
+                {% if uniform.id == 9 or uniform.id == 10 or uniform.category == 'lanyards' or 'lanyard' in uniform.name|lower or 'one size' in uniform.size|lower %}
+                    <input type="hidden" name="size" id="selected_size" value="One Size Fits All">
                     
-                    {% if uniform.id == 9 %}
-                        <div class="size-pill active" style="justify-content: center; width: 100%;">One Size Fits All</div>
-                    {% else %}
+                    <!-- Size Selection (One Size) -->
+                    <div class="form-section">
+                        <div class="section-label">
+                            <span>Prescribed Size</span>
+                            <span id="selected-size-text" class="text-pink">— One Size Fits All</span>
+                        </div>
+                        <div class="one-size-badge-box">
+                            <div class="one-size-pill">
+                                <i class="fas fa-check" style="margin-right: 8px; font-size: 0.85rem; color: #6B9080;"></i> One Size Fits All
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <input type="hidden" name="size" id="selected_size" value="">
+                    
+                    <!-- Size Selection (Standard Sizing Grid) -->
+                    <div class="form-section">
+                        <div class="section-label">
+                            <span>Select Size</span>
+                            <span id="selected-size-text" class="text-pink"></span>
+                        </div>
+                        
                         <div class="size-grid">
                             <button type="button" class="size-pill" data-size="XS">XS</button>
                             <button type="button" class="size-pill" data-size="S">S</button>
@@ -85,19 +90,19 @@
                             <button type="button" class="size-pill" data-size="XXL">2XL</button>
                             <button type="button" class="size-pill" data-size="XXXL">3XL</button>
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
 
                 <!-- Quantity & Submit -->
                 <div class="form-section row-flex">
                     <div class="quantity-wrapper">
                         <button type="button" class="qty-btn" id="decrease-qty">-</button>
-                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ uniform.stock }}" class="qty-input" readonly>
-                        <button type="button" class="qty-btn" id="increase-qty" data-max-stock="{{ uniform.stock }}">+</button>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ uniform.stock|default:99 }}" class="qty-input" readonly>
+                        <button type="button" class="qty-btn" id="increase-qty" data-max-stock="{{ uniform.stock|default:99 }}">+</button>
                     </div>
 
                     {% if uniform.stock > 0 %}
-                        <button type="submit" class="btn-primary-large">Add to Bag</button>
+                        <button type="submit" class="btn-primary-large" id="add-to-bag-btn">Add to Bag</button>
                     {% else %}
                         <button type="button" class="btn-disabled-large" disabled>Out of Stock</button>
                     {% endif %}
@@ -106,8 +111,8 @@
 
             <!-- Feature Checklist -->
             <div class="feature-checklist">
-                <div class="check-item"><i class="fas fa-check-circle"></i>For further information, ask your class adviser for details</div>
-
+                <div class="check-item"><i class="fas fa-map-marker-alt" style="color: #6B9080;"></i> Pickup at DMMMSU NLUC CIS Faculty Office</div>
+                <div class="check-item"><i class="fas fa-shield-alt" style="color: #6B9080;"></i> Settle via Cash on Pickup or Mobile Payment Proof</div>
             </div>
         </div>
     </div>
@@ -118,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const decreaseBtn = document.getElementById('decrease-qty');
     const increaseBtn = document.getElementById('increase-qty');
     const qtyInput = document.getElementById('quantity');
+    const orderForm = document.getElementById('uniform-order-form');
 
     if (decreaseBtn) {
         decreaseBtn.addEventListener('click', function() {
@@ -129,22 +135,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (increaseBtn) {
         increaseBtn.addEventListener('click', function() {
-            const maxStock = parseInt(this.dataset.maxStock);
+            const maxStock = parseInt(this.dataset.maxStock) || 99;
             if (parseInt(qtyInput.value) < maxStock) {
                 qtyInput.value = parseInt(qtyInput.value) + 1;
             }
         });
     }
 
-    const sizeButtons = document.querySelectorAll('.size-pill');
-    if (sizeButtons.length > 0 && document.getElementById('selected_size').value !== 'One Size') {
-        sizeButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                sizeButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('selected_size').value = this.dataset.size;
-                document.getElementById('selected-size-text').textContent = '— ' + this.dataset.size;
-            });
+    const sizeButtons = document.querySelectorAll('.size-grid .size-pill');
+    const selectedSizeInput = document.getElementById('selected_size');
+    const sizeDisplay = document.getElementById('selected-size-text');
+
+    sizeButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            sizeButtons.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            selectedSizeInput.value = this.dataset.size;
+            sizeDisplay.textContent = '— ' + this.dataset.size;
+        });
+    });
+
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            if (!selectedSizeInput.value.trim()) {
+                e.preventDefault();
+                alert('Please select a uniform size before adding to your bag.');
+                sizeDisplay.textContent = '— Please choose a size!';
+                sizeDisplay.style.color = '#DC2626';
+            }
         });
     }
 });

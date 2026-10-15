@@ -1,110 +1,193 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Order Confirmed - iSysWear{% endblock %}
+{% block title %}Order Confirmed &bull; UNISSU{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/orderConfirmation.css' %}">
+<style>
+.order-confirmation-wrapper {
+    padding: 40px 16px;
+    background: linear-gradient(135deg, #FAF8F9 0%, #F8FAFC 100%);
+    min-height: calc(100vh - 120px);
+}
+.confirmation-card {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 36px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.04);
+    text-align: center;
+}
+.confirm-icon-circle {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: #EAF4EE;
+    color: #6B9080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 18px auto;
+}
+.confirm-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1E293B;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+}
+.confirm-desc {
+    color: #64748B;
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+}
+.claim-highlight-box {
+    background: #FFE5EC;
+    border: 1px solid #F4ACB7;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: inline-block;
+    margin-bottom: 28px;
+}
+.claim-highlight-box span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #C86B7A;
+    letter-spacing: 0.05em;
+    display: block;
+}
+.claim-highlight-box strong {
+    font-size: 1.5rem;
+    font-family: monospace;
+    color: #1E293B;
+    letter-spacing: 0.05em;
+}
+.steps-container {
+    text-align: left;
+    background: #F8FAFC;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 28px;
+    border: 1px solid #E2E8F0;
+}
+.step-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+.step-item:last-child {
+    margin-bottom: 0;
+}
+.step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #6B9080;
+    color: #FFFFFF;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+.step-text h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #1E293B;
+    margin-bottom: 2px;
+}
+.step-text p {
+    font-size: 0.82rem;
+    color: #64748B;
+    margin: 0;
+}
+.confirmation-cta-group {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="confirmation-container">
-    <div class="container">
-        <div class="confirmation-content">
-            <div class="confirmation-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-
-            <h1>Order Confirmed!</h1>
-            <p class="confirmation-message">Thank you for your order. We'll send you a confirmation email shortly.</p>
-
-            <div class="order-details-card">
-                <div class="order-header">
-                    <h2>Order Details</h2>
-                    <span class="order-number">Order #{{ order.id }}</span>
-                </div>
-
-                <div class="order-info-grid">
-                    <div class="info-item">
-                        <label>Order Date</label>
-                        <p>{{ order.order_date|date:"M d, Y" }}</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Status</label>
-                        <p><span class="status-badge status-{{ order.status|lower }}">{{ order.get_status_display }}</span></p>
-                    </div>
-                    <div class="info-item">
-                        <label>Total Amount</label>
-                        <p class="amount">₱{{ order.total_amount }}</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Delivery Address</label>
-                        <p>{{ order.address }}</p>
-                    </div>
-                </div>
-            </div>
-{% if order %}
-{% endif %}
-            <div class="ordered-items">
-                <h3>Items in Your Order</h3>
-                <div class="items-list">
-                    {% for item in order.items.all %}
-                        <div class="item-row">
-                            <div class="item-info">
-                                <h4>{{ item.product_name }}</h4>
-                                <p class="item-specs">{{ item.product_id }} - Standard</p>
-                            </div>
-                            <div class="item-qty">Qty: {{ item.quantity }}</div>
-                            <div class="item-price">
-                                <span class="unit-price">₱{{ item.price }} each</span>
-                                <span class="total-price">₱{{ item.get_total_price }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="what-next">
-                <h3>What's Next?</h3>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h4>Order Confirmation</h4>
-                            <p>You'll receive a confirmation email with all order details</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h4>Processing</h4>
-                            <p>We'll process your order within 24 hours</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h4>Shipping</h4>
-                            <p>Your items will be shipped within 2-3 business days</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h4>Delivery</h4>
-                            <p>Receive your order within 5-7 business days</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="confirmation-actions">
-<a href="{% url 'orders:order_details' order.id %}" class="btn-secondary">View Full Order</a>
-                <a href="{% url 'uniforms' %}" class="btn-primary">Continue Shopping</a>
-            </div>
-
-
+<div class="order-confirmation-wrapper">
+    <div class="confirmation-card">
+        
+        <div class="confirm-icon-circle">
+            <i class="fas fa-check"></i>
         </div>
+
+        <h1 class="confirm-title">Order Placed Successfully!</h1>
+        <p class="confirm-desc">Your uniform reservation has been routed to the <strong>DMMMSU NLUC CIS Faculty Office</strong>.</p>
+
+        {% if order %}
+            <div class="claim-highlight-box">
+                <span>Official Digital Claim Code</span>
+                <strong>{{ order.claim_code }}</strong>
+            </div>
+
+            <!-- Operational Workflow Steps -->
+            <div class="steps-container">
+                <h3 style="font-size: 0.95rem; font-weight: 700; color: #1E293B; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.05em;">
+                    <i class="fas fa-clipboard-check" style="color: #6B9080; margin-right: 6px;"></i> Pickup & Fulfillment Workflow
+                </h3>
+
+                <div class="step-item">
+                    <div class="step-dot">1</div>
+                    <div class="step-text">
+                        <h4>Payment / Reservation Verification</h4>
+                        <p>
+                            {% if order.payment_method == 'online' %}
+                                CIS Faculty Office personnel will inspect your uploaded payment reference and receipt screenshot.
+                            {% else %}
+                                Cash on pickup order logged. You will pay in cash upon physical collection at the CIS Faculty Office.
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-dot" style="background: #C86B7A;">2</div>
+                    <div class="step-text">
+                        <h4>Ready for Counter Pickup</h4>
+                        <p>Once verified, the order status changes to <strong>Approved / Ready</strong> and items are prepared for pickup.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-dot" style="background: #1E293B;">3</div>
+                    <div class="step-text">
+                        <h4>Counter Claiming & Physical Handover</h4>
+                        <p>Visit the <strong>{{ order.pickup_location }}</strong>, present your Digital Claim Slip, collect your uniforms, and staff will mark the order complete.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirmation-cta-group">
+                <a href="{% url 'orders:order_receipt' order.id %}" class="btn" style="background: #6B9080; color: #FFFFFF; padding: 12px 28px; border-radius: 10px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-ticket-alt"></i> View Digital Claim Slip
+                </a>
+                <a href="{% url 'orders:order_history' %}" class="btn" style="background: #FFFFFF; color: #475569; border: 1px solid #CBD5E1; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none;">
+                    My Orders
+                </a>
+                <a href="{% url 'uniforms' %}" class="btn" style="background: #FFE5EC; color: #C86B7A; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none;">
+                    Back to Catalog
+                </a>
+            </div>
+
+        {% else %}
+            <p>No recent order found in this session.</p>
+            <a href="{% url 'orders:order_history' %}" class="btn-primary" style="display: inline-block; padding: 10px 20px; border-radius: 8px; text-decoration: none; background: #6B9080; color: #fff;">View Order History</a>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

@@ -12,6 +12,7 @@ from products.models import Uniform
 from orders.models import Order
 from django.db.models import Count
 from users.models import Profile
+from django.utils import timezone
 
 
 def _is_admin(user):
@@ -156,6 +157,32 @@ def users_list(request):
     })
 
 
+@admin_required
+def create_admin_user(request):
+    """
+    Allow authenticated admins and superusers to create new staff or administrator accounts.
+    Regular students and public users have zero access to this flow.
+    """
+    from .forms import AdminUserCreationForm
+    is_su = request.user.is_superuser
+    if request.method == 'POST':
+        form = AdminUserCreationForm(request.POST, is_superuser=is_su)
+        if form.is_valid():
+            new_user = form.save()
+            messages.success(request, f"Administrative account for '{new_user.username}' successfully created.")
+            return redirect('adminpanel:users_list')
+        else:
+            messages.error(request, "Please correct the errors indicated below.")
+    else:
+        form = AdminUserCreationForm(is_superuser=is_su)
+
+    return render(request, "adminpanel/create_admin_user.html", {
+        "form": form,
+        "is_su": is_su
+    })
+
+
+
 
 
 @admin_required
@@ -269,12 +296,57 @@ def orders_list(request):
 
 
 
+def _deduct_order_stock(order):
+    """
+    Automatically decrements database stock for both UniformSize and parent Uniform
+    upon admin approval of the order.
+    """
+    from products.models import Uniform, UniformSize
+    for item in order.items.all():
+        if item.size:
+            size_record = UniformSize.objects.filter(uniform_id=item.product_id, size=item.size).first()
+            if size_record:
+                size_record.stock = max(0, size_record.stock - item.quantity)
+                size_record.save()
+        uniform = Uniform.objects.filter(id=item.product_id).first()
+        if uniform:
+            uniform.stock = max(0, uniform.stock - item.quantity)
+            uniform.save()
+
+
 @admin_required
 def order_detail(request, order_id: int):
-    order = get_object_or_404(Order, id=order_id)
+    order = get_object_or_404(Order.objects.prefetch_related('items'), id=order_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        old_status = order.status
+
+        if action == 'approve':
+            order.status = 'approved'
+            order.verified_at = timezone.now()
+            order.admin_notes = request.POST.get('admin_notes', order.admin_notes or 'Payment / reservation verified.')
+            order.save()
+            if old_status != 'approved':
+                _deduct_order_stock(order)
+            messages.success(request, f"Order #{order.id} ({order.claim_code}) approved as Ready for Pickup. Stock has been decremented.")
+            return redirect('adminpanel:order_detail', order_id=order_id)
+
+        elif action == 'reject':
+            order.status = 'rejected'
+            order.admin_notes = request.POST.get('admin_notes', 'Payment verification failed.')
+            order.save()
+            messages.warning(request, f"Order #{order.id} has been marked as Rejected.")
+            return redirect('adminpanel:order_detail', order_id=order_id)
+
+        elif action == 'complete':
+            order.status = 'completed'
+            order.claimed_at = timezone.now()
+            order.save()
+            messages.success(request, f"Order #{order.id} marked as Completed. Items physically handed over.")
+            return redirect('adminpanel:order_detail', order_id=order_id)
+
     return render(request, "adminpanel/order_detail.html", {"order": order})
-
-
 
 
 @admin_required
@@ -292,6 +364,11 @@ def update_order_status(request, order_id: int):
         order.total_amount = request.POST.get('total_amount', order.total_amount)
         new_status = request.POST.get('status')
         if new_status in dict(Order.STATUS_CHOICES):
+            if new_status == 'approved' and old_status != 'approved':
+                order.verified_at = timezone.now()
+                _deduct_order_stock(order)
+            elif new_status == 'completed' and not order.claimed_at:
+                order.claimed_at = timezone.now()
             order.status = new_status
        
         order.save()
@@ -299,18 +376,19 @@ def update_order_status(request, order_id: int):
         # Send notification email
         from django.core.mail import send_mail
         subject = f'Order #{order.id} Status Update'
-        message = f'Dear {order.customer_name},\n\nYour order #{order.id} status has been updated from {old_status} to {order.status.upper()}.\n\nTotal: ₱{order.total_amount}\n\nThank you!'
+        message = f'Dear {order.customer_name},\n\nYour order #{order.id} ({order.claim_code}) status has been updated from {old_status} to {order.status.upper()}.\n\nTotal: ₱{order.total_amount}\n\nThank you!'
         send_mail(
             subject,
             message,
             'noreply@isyswear.local',
             [order.email],
-            fail_silently=False,
+            fail_silently=True,
         )
-        messages.success(request, f"Order #{order.id} updated successfully. Student can now view the updated status in their account.")
+        messages.success(request, f"Order #{order.id} updated successfully.")
         return redirect('adminpanel:order_detail', order_id=order_id)
    
     return render(request, 'adminpanel/order_update.html', {'order': order})
+
 
 
 def admin_login_view(request):

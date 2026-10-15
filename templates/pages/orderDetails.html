@@ -42,22 +42,32 @@
             </div>
         </div>
 
-        <!-- Address -->
+        <!-- Pickup Station & Payment Method -->
         <div class="section">
-            <h2>Shipping Address</h2>
-            <p>{{ order.address }}</p>
-            {% if order.phone %}<p><strong>Phone:</strong> {{ order.phone }}</p>{% endif %}
+            <h2>Pickup & Payment Details</h2>
+            <p><strong>Claim Code:</strong> <code style="background: #EAF4EE; color: #2C5E43; padding: 2px 6px; border-radius: 4px; font-weight: 700;">{{ order.claim_code }}</code></p>
+            <p><strong>Pickup Station:</strong> {{ order.pickup_location }}</p>
+            <p><strong>Payment Method:</strong> 
+                {% if order.payment_method == 'online' %}
+                    Online Payment (Ref: {{ order.payment_reference }})
+                {% else %}
+                    Cash on Pickup
+                {% endif %}
+            </p>
+            {% if order.phone %}<p><strong>Contact Phone:</strong> {{ order.phone }}</p>{% endif %}
+            {% if order.admin_notes %}<p style="color: #64748B;"><strong>Staff Note:</strong> {{ order.admin_notes }}</p>{% endif %}
         </div>
 
         <!-- Items Table -->
         <div class="section full-width">
-            <h2>Order Items ({{ order.items.all|length }})</h2>
+            <h2>Reserved Items ({{ order.items.all|length }})</h2>
             {% if order.items.exists %}
             <div class="items-table">
                 <table>
                     <thead>
                         <tr>
                             <th>Product</th>
+                            <th>Size</th>
                             <th>Qty</th>
                             <th>Price</th>
                             <th>Total</th>
@@ -67,6 +77,7 @@
                         {% for item in order.items.all %}
                         <tr>
                             <td>{{ item.product_name }}</td>
+                            <td><span style="background: #FFE5EC; color: #C86B7A; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.8rem;">{{ item.size|default:"Standard" }}</span></td>
                             <td>{{ item.quantity }}</td>
                             <td>₱{{ item.price|floatformat:2 }}</td>
                             <td>₱{{ item.get_total_price|floatformat:2 }}</td>
@@ -81,9 +92,9 @@
         </div>
     </div>
 
-    <div style="text-align: center; margin-top: 30px;">
+    <div style="text-align: center; margin-top: 30px; display: flex; gap: 12px; justify-content: center;">
         <a href="{% url 'orders:order_history' %}" class="btn btn-secondary">← Back to Orders</a>
-        <a href="{% url 'orders:order_receipt' order.id %}" class="btn btn-primary" target="_blank">Print Receipt</a>
+        <a href="{% url 'orders:order_receipt' order.id %}" class="btn btn-primary" style="background: #6B9080; border-color: #6B9080;">View Digital Claim Slip</a>
     </div>
 </div>
 {% endblock %}

@@ -15,3 +15,6 @@ env/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Generated static files
+.static_prod/

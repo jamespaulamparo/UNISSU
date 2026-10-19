@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from products.models import Uniform
 from orders.models import Order
 from django.db.models import Count
+from django.db.models import Sum, Count, Max
 from users.models import Profile
 from django.utils import timezone
 
@@ -114,13 +115,13 @@ def reports(request):
 
 
 
+
 @admin_required
 def users_list(request):
     qs = User.objects.annotate(
         orders_count=Count('orders'),
         assigned_count=Count('profile__assigned_products', distinct=True)
-    ).prefetch_related('orders', 'profile').order_by("-date_joined")
-
+    ).prefetch_related('orders', 'profile').order_by('-date_joined')
 
     unused_users = User.objects.filter(
         is_superuser=False,
@@ -134,26 +135,72 @@ def users_list(request):
         assigned_count=0
     )
 
-
     unused_count = unused_users.count()
-
 
     if request.method == 'POST':
         action = request.POST.get('action')
+
         if action == 'cleanup_unused':
-            confirm = request.POST.get('confirm')
-            if confirm == 'yes':
-                deleted_count, _ = unused_users.delete()
-                messages.success(request, f'Successfully deleted {deleted_count} unused user(s).')
-            else:
+            if request.POST.get('confirm') != 'yes':
                 messages.warning(request, 'Cleanup cancelled.')
+                return redirect('adminpanel:users_list')
+
+            # Count users separately because delete() also counts
+            # related objects removed through cascading relationships.
+            users_to_delete = unused_users.count()
+            unused_users.delete()
+
+            messages.success(
+                request,
+                f'Successfully deleted {users_to_delete} unused user(s).'
+            )
             return redirect('adminpanel:users_list')
 
+        elif action == 'delete_user':
+            raw_user_id = request.POST.get('user_id')
 
-    return render(request, "adminpanel/users.html", {
-        "users": qs,
-        "unused_count": unused_count,
-        "unused_users": unused_users  # for template row marking
+            try:
+                target_user = User.objects.get(pk=int(raw_user_id))
+            except (TypeError, ValueError, User.DoesNotExist):
+                messages.error(request, 'The selected user could not be found.')
+                return redirect('adminpanel:users_list')
+
+            if target_user.pk == request.user.pk:
+                messages.error(request, 'You cannot delete your own account.')
+
+            elif target_user.is_superuser and not request.user.is_superuser:
+                messages.error(
+                    request,
+                    'Only a superuser can delete another superuser account.'
+                )
+
+            elif (
+                target_user.is_superuser
+                and User.objects.filter(is_superuser=True).count() <= 1
+            ):
+                messages.error(
+                    request,
+                    'The last superuser account cannot be deleted.'
+                )
+
+            else:
+                username = target_user.username
+                target_user.delete()
+
+                messages.success(
+                    request,
+                    f"User '{username}' was permanently deleted."
+                )
+
+            return redirect('adminpanel:users_list')
+
+        messages.error(request, 'Invalid user management action.')
+        return redirect('adminpanel:users_list')
+
+    return render(request, 'adminpanel/users.html', {
+        'users': qs,
+        'unused_count': unused_count,
+        'unused_users': unused_users,
     })
 
 
@@ -401,27 +448,65 @@ def admin_login_view(request):
 
 
 @admin_required
+
+@admin_required
 def student_orders(request):
-    """List non-staff users (students) who have placed orders"""
-    students = User.objects.filter(
-        is_staff=False,
-        is_superuser=False,
-        orders__isnull=False
-    ).distinct().prefetch_related('orders', 'profile').order_by('-id')
-    return render(request, 'adminpanel/student_orders.html', {'students': students})
+    """List students with orders and their order summaries."""
+    students = (
+        User.objects.filter(
+            is_staff=False,
+            is_superuser=False,
+            orders__isnull=False,
+        )
+        .annotate(
+            orders_count=Count('orders', distinct=True),
+            total_spent=Sum('orders__total_amount'),
+            latest_order_date=Max('orders__order_date'),
+        )
+        .prefetch_related('profile')
+        .order_by('-id')
+    )
+
+    return render(
+        request,
+        'adminpanel/student_orders.html',
+        {'students': students},
+    )
+
 
 
 @admin_required
 def student_order_detail(request, user_id):
-    """Detail for a student: profile + their orders"""
-    user = get_object_or_404(User, id=user_id, is_staff=False)
+    """Display a student's profile and order history."""
+    user = get_object_or_404(
+        User,
+        id=user_id,
+        is_staff=False,
+        is_superuser=False
+    )
+
     profile = getattr(user, 'profile', None)
-    orders = user.orders.all().order_by('-order_date')
+
+    orders = (
+        user.orders
+        .all()
+        .order_by('-order_date')
+        .prefetch_related('items')
+    )
+
+    total_orders = orders.count()
+    total_spent = orders.aggregate(
+        total=Sum('total_amount')
+    )['total'] or 0
+
     return render(request, 'adminpanel/student_order_detail.html', {
         'student': user,
         'profile': profile,
-        'orders': orders
+        'orders': orders,
+        'total_orders': total_orders,
+        'total_spent': total_spent,
     })
+
 
 
 import json

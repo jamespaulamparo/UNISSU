@@ -1,3 +1,4 @@
+
 {% extends 'adminpanel/base.html' %}
 
 {% block title %}Student Orders - Admin{% endblock %}
@@ -5,75 +6,184 @@
 {% block content %}
 <div class="page-header">
     <h1>Students Who Ordered ({{ students.count }})</h1>
+
     <div class="header-actions">
-        <a href="{% url 'adminpanel:dashboard' %}" class="btn btn-secondary">← Dashboard</a>
-        <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-secondary">All Orders</a>
+        <a href="{% url 'adminpanel:dashboard' %}" class="btn btn-secondary">
+            ← Dashboard
+        </a>
+        <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-secondary">
+            All Orders
+        </a>
     </div>
 </div>
 
 {% if students %}
-<table class="data-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Student</th>
-            <th>Email</th>
-            <th>Total Orders</th>
-            <th>Total Spent</th>
-            <th>Latest Order</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for student in students %}
-        <tr>
-            <td>{{ student.id }}</td>
-            <td>{{ student.username }} {% if student.profile.full_name %}({{ student.profile.full_name }}){% endif %}</td>
-            <td>{{ student.email|default:'-' }}</td>
-            <td>{{ student.orders.count }}</td>
-            <td>${{ student.orders.aggregate(total=Sum('total_amount')).total|floatformat:2|default:'0.00' }}</td>
-            <td>{{ student.orders.latest.order_date|date:'M d, Y' }}</td>
-            <td>
-                <a href="{% url 'adminpanel:student_order_detail' student.id %}" class="btn btn-sm btn-primary">View Orders</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Student</th>
+                <th>Email</th>
+                <th>Total Orders</th>
+                <th>Total Spent</th>
+                <th>Latest Order</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+
+                <td>
+                    {{ student.username }}
+                    {% if student.profile.full_name %}
+                        <span class="student-full-name">
+                            ({{ student.profile.full_name }})
+                        </span>
+                    {% endif %}
+                </td>
+
+                <td>{{ student.email|default:"-" }}</td>
+
+                <td>{{ student.orders_count }}</td>
+
+                <td>
+                    ₱{{ student.total_spent|default_if_none:"0.00"|floatformat:2 }}
+                </td>
+
+                <td>
+                    {% if student.latest_order_date %}
+                        {{ student.latest_order_date|date:"M d, Y" }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a
+                        href="{% url 'adminpanel:student_order_detail' student.id %}"
+                        class="btn btn-sm btn-view-orders"
+                    >
+                        View Orders
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 {% else %}
 <div class="empty-state">
     <h3>No students with orders yet.</h3>
     <p>Check back later or view all orders.</p>
-    <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-primary">View All Orders</a>
+
+    <a href="{% url 'adminpanel:orders_list' %}" class="btn btn-primary">
+        View All Orders
+    </a>
 </div>
 {% endif %}
 
 <style>
 .header-actions {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
 }
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 10px;
+}
+
 .data-table {
     width: 100%;
     border-collapse: collapse;
 }
-.data-table th, .data-table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
+
+.data-table th,
+.data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
     text-align: left;
+    vertical-align: middle;
 }
+
 .data-table th {
     background: #343a40;
-    color: white;
+    color: #ffffff;
+    font-weight: 600;
+    white-space: nowrap;
 }
-.data-table tr:hover {
+
+.data-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.data-table tbody tr:hover {
     background: #f8f9fa;
 }
+
+.student-full-name {
+    color: #6b7280;
+}
+
+.btn-view-orders {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 12px;
+    border: 1px solid #2563eb;
+    border-radius: 6px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.btn-view-orders:hover {
+    background: #2563eb;
+    border-color: #2563eb;
+    color: #ffffff;
+}
+
 .empty-state {
-    text-align: center;
     padding: 60px 20px;
-    background: #f8f9fa;
     border-radius: 8px;
-    color: #666;
+    background: #f8f9fa;
+    color: #666666;
+    text-align: center;
+}
+
+.empty-state h3 {
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 12px;
+    }
 }
 </style>
+{% endblock %}

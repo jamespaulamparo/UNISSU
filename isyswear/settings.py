@@ -144,7 +144,7 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'dbIsyswear',
             'USER': 'root',
-            'PASSWORD': 'zxCvbn_m16**',
+            'PASSWORD': '',
             'HOST': '127.0.0.1',
             'PORT': '3306',
             'OPTIONS': {
